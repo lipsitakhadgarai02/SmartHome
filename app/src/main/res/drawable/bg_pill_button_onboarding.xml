@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#004D4D" />
+            <corners android:radius="40dp" />
+        </shape>
+    </item>
+    <item android:right="12dp" android:left="240dp" android:top="8dp" android:bottom="8dp">
+        <shape android:shape="oval">
+            <solid android:color="#4DFFFFFF" />
+        </shape>
+    </item>
+    <!-- In production, add an <item android:drawable="@drawable/ic_arrow_right" ... /> here -->
+</layer-list>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary_teal">#004D4D</color>
+    <color name="secondary_teal">#003333</color>
+    <color name="light_mint">#D5E8D4</color>
+    <color name="bg_light">#F5F7F7</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="gray_text">#757575</color>
+    <color name="light_gray">#E0E0E0</color>
+    <color name="accent_green">#1DE9B6</color>
+    <color name="blob_teal_light">#80B2DFDB</color>
+</resources>
