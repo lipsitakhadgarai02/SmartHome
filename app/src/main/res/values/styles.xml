@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="RemoteButton">
+        <item name="android:layout_width">70dp</item>
+        <item name="android:layout_height">70dp</item>
+        <item name="android:layout_margin">12dp</item>
+        <item name="android:background">@drawable/bg_remote_button_circular</item>
+        <item name="android:padding">20dp</item>
+        <item name="android:scaleType">centerInside</item>
+        <item name="app:tint">@color/primary_teal</item>
+    </style>
+
+    <style name="RemoteButton.Circular">
+        <item name="android:layout_width">56dp</item>
+        <item name="android:layout_height">56dp</item>
+        <item name="android:padding">16dp</item>
+    </style>
+
+    <!-- AC Control Styles -->
+    <style name="AcModeItem">
+        <item name="android:layout_width">70dp</item>
+        <item name="android:layout_height">70dp</item>
+        <item name="android:layout_marginHorizontal">8dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="AcModeIcon">
+        <item name="android:layout_width">24dp</item>
+        <item name="android:layout_height">24dp</item>
+        <item name="app:tint">@color/gray_text</item>
+    </style>
+
+    <style name="AcModeText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/gray_text</item>
+    </style>
+</resources>

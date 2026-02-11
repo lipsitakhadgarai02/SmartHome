@@ -20,6 +20,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".HomeActivity" />
+        <activity android:name=".OnboardingActivity" />
+        <activity android:name=".SignInActivity" />
+        <activity android:name=".SignUpActivity" />
+        <activity android:name=".OTPActivity" />
+        <activity android:name=".DeviceScanActivity" />
+        <activity android:name=".RoomsActivity" />
+        <activity android:name=".SettingsActivity" />
+        <activity android:name=".SearchActivity" />
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".TvRemoteActivity" />
+        <activity android:name=".LampControlActivity" />
+        <activity android:name=".AcControlActivity" />
+        <activity android:name=".UserProfileActivity" />
+        <activity android:name=".DeviceDiscoveryActivity" />
     </application>
 
 </manifest>
