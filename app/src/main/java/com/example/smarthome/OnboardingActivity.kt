@@ -2,7 +2,7 @@ package com.example.smarthome
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 
 class OnboardingActivity : AppCompatActivity() {
@@ -10,8 +10,8 @@ class OnboardingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_onboarding)
 
-        val btnNext = findViewById<Button>(R.id.btn_next)
-        btnNext.setOnClickListener {
+        val btnGetIn = findViewById<View>(R.id.fl_get_in)
+        btnGetIn.setOnClickListener {
             startActivity(Intent(this, SignInActivity::class.java))
         }
     }

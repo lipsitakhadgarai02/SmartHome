@@ -15,15 +15,23 @@ class HomeActivity : AppCompatActivity() {
 
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.nav_devices -> {
-                    startActivity(Intent(this, DeviceScanActivity::class.java))
+                R.id.nav_home -> {
+                    // Already on home
                     true
                 }
                 R.id.nav_rooms -> {
                     startActivity(Intent(this, RoomsActivity::class.java))
                     true
                 }
-                else -> true
+                R.id.nav_devices -> {
+                    startActivity(Intent(this, DeviceScanActivity::class.java))
+                    true
+                }
+                R.id.nav_settings -> {
+                    // Start Settings activity if it exists
+                    true
+                }
+                else -> false
             }
         }
     }
