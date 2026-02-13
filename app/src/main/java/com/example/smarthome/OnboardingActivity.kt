@@ -10,9 +10,8 @@ class OnboardingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_onboarding)
 
-        val btnGetIn = findViewById<View>(R.id.fl_get_in)
-        btnGetIn.setOnClickListener {
-            startActivity(Intent(this, SignInActivity::class.java))
+        findViewById<View>(R.id.fl_get_in).setOnClickListener {
+            startActivity(Intent(this, Onboarding2Activity::class.java))
         }
     }
 }

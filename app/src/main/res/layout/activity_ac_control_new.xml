@@ -12,8 +12,8 @@
         android:id="@+id/iv_back_ac"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="32dp"
         android:padding="8dp"
         android:src="@drawable/ic_arrow_back"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:text="Living Room"
         android:textColor="@color/primary_teal"
-        android:textSize="18sp"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/iv_back_ac"
         app:layout_constraintEnd_toEndOf="parent"
@@ -37,11 +37,11 @@
         android:id="@+id/tv_ac_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="40dp"
         android:text="AC"
         android:textColor="@color/black"
-        android:textSize="16sp"
+        android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/iv_back_ac" />
@@ -52,7 +52,7 @@
         android:layout_height="wrap_content"
         android:text="Bed Room"
         android:textColor="@color/gray_text"
-        android:textSize="12sp"
+        android:textSize="14sp"
         app:layout_constraintStart_toStartOf="@+id/tv_ac_title"
         app:layout_constraintTop_toBottomOf="@+id/tv_ac_title" />
 
@@ -60,7 +60,7 @@
         android:id="@+id/ll_ac_switch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="20dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="@+id/tv_ac_room"
@@ -85,7 +85,7 @@
     <androidx.cardview.widget.CardView
         android:layout_width="160dp"
         android:layout_height="160dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginEnd="24dp"
         app:cardCornerRadius="24dp"
         app:cardElevation="0dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -110,7 +110,7 @@
         android:id="@+id/ll_modes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="48dp"
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@+id/ll_ac_switch">
@@ -141,7 +141,7 @@
         android:id="@+id/fl_temp_control"
         android:layout_width="220dp"
         android:layout_height="220dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ll_modes">
@@ -164,7 +164,7 @@
             android:layout_gravity="center"
             android:text="24°C"
             android:textColor="@color/primary_teal"
-            android:textSize="32sp"
+            android:textSize="56sp"
             android:textStyle="bold" />
     </FrameLayout>
 
@@ -173,7 +173,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="48dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="40dp"
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@+id/fl_temp_control">
@@ -181,7 +181,7 @@
         <androidx.cardview.widget.CardView
             android:layout_width="70dp"
             android:layout_height="100dp"
-            app:cardCornerRadius="16dp"
+            app:cardCornerRadius="24dp"
             app:cardElevation="4dp">
             <ImageView
                 android:layout_width="24dp"
@@ -195,7 +195,7 @@
         <androidx.cardview.widget.CardView
             android:layout_width="70dp"
             android:layout_height="100dp"
-            app:cardCornerRadius="16dp"
+            app:cardCornerRadius="24dp"
             app:cardElevation="4dp">
             <ImageView
                 android:layout_width="24dp"

@@ -6,6 +6,7 @@
     android:background="@android:color/transparent">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cv_bottom_nav"
         android:layout_width="match_parent"
         android:layout_height="70dp"
         app:cardBackgroundColor="@color/white"
@@ -21,12 +22,16 @@
             android:orientation="horizontal">
 
             <LinearLayout
+                android:id="@+id/ll_home"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:clickable="true"
+                android:focusable="true">
                 <ImageView
+                    android:id="@+id/ic_home"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_home"
@@ -40,11 +45,14 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ll_search"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:clickable="true"
+                android:focusable="true">
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
@@ -66,11 +74,14 @@
                 android:layout_weight="1" />
 
             <LinearLayout
+                android:id="@+id/ll_devices"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:clickable="true"
+                android:focusable="true">
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
@@ -85,11 +96,14 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ll_settings"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:clickable="true"
+                android:focusable="true">
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
@@ -108,6 +122,7 @@
 
     <!-- Floating Mic Button -->
     <androidx.cardview.widget.CardView
+        android:id="@+id/cv_mic"
         android:layout_width="64dp"
         android:layout_height="64dp"
         app:cardBackgroundColor="@color/primary_teal"

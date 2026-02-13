@@ -11,10 +11,9 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
-        // Navigate to Login after 2.5 seconds
         Handler(Looper.getMainLooper()).postDelayed({
-            startActivity(Intent(this, SignInActivity::class.java))
+            startActivity(Intent(this, OnboardingActivity::class.java))
             finish()
-        }, 2500)
+        }, 2000)
     }
 }
