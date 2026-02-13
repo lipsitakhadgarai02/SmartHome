@@ -1,7 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.SmartHome" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+    <!-- Force light theme even in night mode -->
+    <style name="Base.Theme.SmartHome" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="android:colorBackground">@color/background_light</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:statusBarColor">@color/white</item>
     </style>
 </resources>

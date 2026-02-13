@@ -10,30 +10,43 @@
     <!-- Header Section -->
     <ImageView
         android:id="@+id/btn_back"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:padding="8dp"
+        android:layout_marginTop="32dp"
+        android:padding="12dp"
         android:src="@drawable/ic_arrow_back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:tint="@color/primary_teal" />
 
+    <!-- Big Title to push widgets lower (reachability design) -->
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="16dp"
+        android:text="My Rooms"
+        android:textColor="@color/black"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_back" />
+
     <LinearLayout
         android:id="@+id/search_bar"
         android:layout_width="0dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="24dp"
+        android:layout_height="50dp"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="12dp"
         android:background="@drawable/bg_search_bar_rooms"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingHorizontal="12dp"
-        app:layout_constraintBottom_toBottomOf="@id/btn_back"
+        android:paddingHorizontal="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/btn_back"
-        app:layout_constraintTop_toTopOf="@id/btn_back">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_title">
 
         <ImageView
             android:layout_width="20dp"
@@ -41,29 +54,37 @@
             android:src="@drawable/ic_search"
             app:tint="@color/primary_teal" />
 
-        <TextView
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/et_search"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="Search here"
-            android:textColor="#A0A0A0"
-            android:textSize="14sp" />
+            android:layout_marginStart="12dp"
+            android:background="@android:color/transparent"
+            android:hint="Search here"
+            android:textColor="@color/black"
+            android:textColorHint="#A0A0A0"
+            android:textSize="14sp"
+            android:focusable="false"
+            android:clickable="false"
+            android:cursorVisible="false"
+            android:imeOptions="actionSearch"
+            android:inputType="text" />
     </LinearLayout>
 
-    <!-- Scrollable Grid Area -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintBottom_toTopOf="@id/bottom_nav_container"
+        android:layout_marginTop="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/search_bar">
 
         <GridLayout
+            android:id="@+id/gl_rooms"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:columnCount="2"
-            android:paddingHorizontal="12dp"
-            android:paddingBottom="24dp">
+            android:paddingHorizontal="16dp"
+            android:paddingBottom="48dp">
 
             <!-- Create Room Card -->
             <androidx.cardview.widget.CardView
@@ -79,7 +100,8 @@
                     android:layout_height="match_parent"
                     android:background="@drawable/bg_room_card"
                     android:gravity="center"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:tag="Create Room">
 
                     <FrameLayout
                         android:layout_width="60dp"
@@ -129,7 +151,8 @@
                     android:layout_height="match_parent"
                     android:background="@drawable/bg_room_card"
                     android:gravity="center"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:tag="Bed Room">
 
                     <ImageView
                         android:layout_width="50dp"
@@ -199,7 +222,8 @@
                     android:layout_height="match_parent"
                     android:background="@drawable/bg_room_card"
                     android:gravity="center"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:tag="Kitchen">
 
                     <ImageView
                         android:layout_width="50dp"
@@ -269,7 +293,8 @@
                     android:layout_height="match_parent"
                     android:background="@drawable/bg_room_card"
                     android:gravity="center"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:tag="Living Room">
 
                     <ImageView
                         android:layout_width="50dp"
@@ -327,15 +352,5 @@
 
         </GridLayout>
     </androidx.core.widget.NestedScrollView>
-
-    <!-- Independent Bottom Navigation Container (No changes to existing navbar) -->
-    <FrameLayout
-        android:id="@+id/bottom_nav_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent">
-        <!-- Using the existing navigation layout independently -->
-        <include layout="@layout/layout_bottom_nav" />
-    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

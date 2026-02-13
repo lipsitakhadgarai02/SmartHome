@@ -367,11 +367,4 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Floating Bottom Navigation with Devices Highlighted -->
-    <include
-        layout="@layout/layout_bottom_nav_devices"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

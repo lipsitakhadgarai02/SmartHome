@@ -15,7 +15,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
 import androidx.drawerlayout.widget.DrawerLayout
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 
 class HomeActivity : AppCompatActivity() {
@@ -41,12 +40,16 @@ class HomeActivity : AppCompatActivity() {
         val navigationView = findViewById<NavigationView>(R.id.navigation_view)
         val ivMenu = findViewById<ImageView>(R.id.iv_menu)
 
+        // Hamburger Click - Open Drawer
         ivMenu.setOnClickListener {
             drawerLayout.openDrawer(GravityCompat.START)
         }
 
         navigationView.setNavigationItemSelectedListener { item ->
             when (item.itemId) {
+                R.id.drawer_home -> {
+                    // Already on Home
+                }
                 R.id.drawer_devices -> {
                     val intent = Intent(this, DeviceScanActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
@@ -68,7 +71,7 @@ class HomeActivity : AppCompatActivity() {
                 }
                 R.id.drawer_notifications -> navigateToNotifications()
                 R.id.drawer_settings -> {
-                    val intent = Intent(this, ProfileActivity::class.java)
+                    val intent = Intent(this, UserProfileActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
                     startActivity(intent)
                 }
@@ -80,35 +83,31 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun setupBottomNavigation() {
-        val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_nav)
-        bottomNav.selectedItemId = R.id.nav_home
+        // Navigation using IDs from layout_bottom_nav.xml
+        findViewById<View>(R.id.ll_home)?.setOnClickListener {
+            // Already on Home
+        }
 
-        // Disable internal inset handling to prevent icon clipping
-        ViewCompat.setOnApplyWindowInsetsListener(bottomNav) { _, insets -> insets }
+        findViewById<View>(R.id.ll_rooms)?.setOnClickListener {
+            startActivity(Intent(this, RoomsActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+            })
+        }
 
-        bottomNav.setOnItemSelectedListener { item ->
-            if (item.itemId == bottomNav.selectedItemId) return@setOnItemSelectedListener true
+        findViewById<View>(R.id.ll_devices)?.setOnClickListener {
+            startActivity(Intent(this, DeviceScanActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+            })
+        }
 
-            when (item.itemId) {
-                R.id.nav_home -> true
-                R.id.nav_rooms -> {
-                    startActivity(Intent(this, RoomsActivity::class.java).apply {
-                        flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-                    })
-                    true
-                }
-                R.id.nav_devices -> {
-                    startActivity(Intent(this, DeviceScanActivity::class.java).apply {
-                        flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-                    })
-                    true
-                }
-                R.id.nav_settings -> {
-                    navigateToNotifications()
-                    true
-                }
-                else -> false
-            }
+        findViewById<View>(R.id.ll_settings)?.setOnClickListener {
+            startActivity(Intent(this, UserProfileActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+            })
+        }
+
+        findViewById<View>(R.id.cv_mic)?.setOnClickListener {
+            // Mic action
         }
     }
 
