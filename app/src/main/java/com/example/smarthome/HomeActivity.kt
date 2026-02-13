@@ -2,6 +2,7 @@ package com.example.smarthome
 
 import android.content.Intent
 import android.os.Bundle
+<<<<<<< HEAD
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
@@ -14,6 +15,11 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
+=======
+import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
+>>>>>>> origin/main
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
@@ -26,6 +32,7 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
+<<<<<<< HEAD
         // Initialize UI and Navigation
         setupDrawer()
         setupBottomNavigation()
@@ -37,14 +44,22 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun setupDrawer() {
+=======
+        // Initialize Drawer
+>>>>>>> origin/main
         drawerLayout = findViewById(R.id.drawer_layout)
         val navigationView = findViewById<NavigationView>(R.id.navigation_view)
         val ivMenu = findViewById<ImageView>(R.id.iv_menu)
 
+<<<<<<< HEAD
+=======
+        // Hamburger Click - Open Drawer
+>>>>>>> origin/main
         ivMenu.setOnClickListener {
             drawerLayout.openDrawer(GravityCompat.START)
         }
 
+<<<<<<< HEAD
         navigationView.setNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.drawer_devices -> {
@@ -73,13 +88,45 @@ class HomeActivity : AppCompatActivity() {
                     startActivity(intent)
                 }
                 R.id.drawer_logout -> performLogout()
+=======
+        // Drawer Navigation Items Click
+        navigationView.setNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.drawer_home -> {
+                    // Already on Home
+                }
+                R.id.drawer_devices -> {
+                    startActivity(Intent(this, DeviceScanActivity::class.java))
+                }
+                R.id.drawer_add_device -> {
+                    startActivity(Intent(this, DeviceDiscoveryActivity::class.java))
+                }
+                R.id.drawer_automations -> {
+                    // TODO: Connect Automations Screen
+                }
+                R.id.drawer_notifications -> {
+                    // TODO: Connect Notifications Screen
+                }
+                R.id.drawer_settings -> {
+                    // TODO: Connect Settings Screen
+                }
+                R.id.drawer_logout -> {
+                    startActivity(Intent(this, SignInActivity::class.java))
+                    finishAffinity()
+                }
+>>>>>>> origin/main
             }
             drawerLayout.closeDrawer(GravityCompat.START)
             true
         }
+<<<<<<< HEAD
     }
 
     private fun setupBottomNavigation() {
+=======
+
+        // Bottom Navigation Logic (Preserved)
+>>>>>>> origin/main
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_nav)
         bottomNav.selectedItemId = R.id.nav_home
 
@@ -103,15 +150,20 @@ class HomeActivity : AppCompatActivity() {
                     })
                     true
                 }
+<<<<<<< HEAD
                 R.id.nav_settings -> {
                     navigateToNotifications()
                     true
                 }
+=======
+                R.id.nav_settings -> true
+>>>>>>> origin/main
                 else -> false
             }
         }
     }
 
+<<<<<<< HEAD
     private fun setupClickListeners() {
         findViewById<CardView>(R.id.cv_energy)?.setOnClickListener {
             startActivity(Intent(this, DeviceManagementActivity::class.java).apply {
@@ -191,4 +243,13 @@ class HomeActivity : AppCompatActivity() {
             .setNegativeButton("No", null)
             .show()
     }
+=======
+    override fun onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START)
+        } else {
+            super.onBackPressed()
+        }
+    }
+>>>>>>> origin/main
 }
