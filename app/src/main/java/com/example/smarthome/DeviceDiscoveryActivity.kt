@@ -1,36 +1,37 @@
 package com.example.smarthome
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageView
-import androidx.activity.OnBackPressedCallback
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 
-/**
- * DeviceDiscoveryActivity handles the UI for scanning and finding nearby smart devices.
- * This activity is independent and follows the project's clean code standards.
- */
 class DeviceDiscoveryActivity : AppCompatActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_device_discovery)
 
-        setupClickListeners()
-
-        // Handle modern back press logic
-        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                finish()
-            }
-        })
-    }
-
-    private fun setupClickListeners() {
-        // Back Button Logic
-        findViewById<ImageView>(R.id.btn_back_discovery)?.setOnClickListener {
-            finish()
+        // Back button navigation
+        findViewById<ImageView>(R.id.btn_back_discovery).setOnClickListener {
+            onBackPressed()
         }
 
-        // Logic for interacting with found devices can be added here
+        // Device selection navigation
+        
+        // AC card -> AcControlActivity
+        findViewById<LinearLayout>(R.id.ll_found_ac).setOnClickListener {
+            startActivity(Intent(this, AcControlActivity::class.java))
+        }
+
+        // Smart Fan -> LampControlActivity (as a substitute if FanControlActivity is missing) 
+        // Or connect to RoomDetails/Management if available
+        findViewById<LinearLayout>(R.id.ll_found_fan).setOnClickListener {
+            startActivity(Intent(this, DeviceManagementActivity::class.java))
+        }
+
+        // Smart TV -> TvRemoteActivity
+        findViewById<LinearLayout>(R.id.ll_found_tv).setOnClickListener {
+            startActivity(Intent(this, TvRemoteActivity::class.java))
+        }
     }
 }
