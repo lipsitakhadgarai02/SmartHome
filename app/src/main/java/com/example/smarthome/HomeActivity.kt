@@ -105,10 +105,6 @@ class HomeActivity : AppCompatActivity() {
                 flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
             })
         }
-
-        findViewById<View>(R.id.cv_mic)?.setOnClickListener {
-            // Mic action
-        }
     }
 
     private fun setupClickListeners() {
@@ -133,16 +129,11 @@ class HomeActivity : AppCompatActivity() {
 
     private fun applyWindowInsets() {
         val bottomNavContainer = findViewById<View>(R.id.cv_bottom_nav)
-        val micButton = findViewById<View>(R.id.cv_mic)
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content)) { _, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             
             bottomNavContainer?.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                bottomInsets(systemBars.bottom)
-            }
-            
-            micButton?.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                 bottomInsets(systemBars.bottom)
             }
             
