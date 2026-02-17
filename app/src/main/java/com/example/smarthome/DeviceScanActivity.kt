@@ -1,9 +1,7 @@
 package com.example.smarthome
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageView
-import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 
 class DeviceScanActivity : AppCompatActivity() {
@@ -12,18 +10,12 @@ class DeviceScanActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_device_scan)
 
-        setupClickListeners()
-
-        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                finish()
-            }
-        })
+        setupNavigation()
     }
 
-    private fun setupClickListeners() {
+    private fun setupNavigation() {
         findViewById<ImageView>(R.id.iv_back)?.setOnClickListener {
-            finish()
+            onBackPressedDispatcher.onBackPressed()
         }
     }
 }

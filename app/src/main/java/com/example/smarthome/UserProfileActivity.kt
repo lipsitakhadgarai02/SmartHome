@@ -1,8 +1,8 @@
 package com.example.smarthome
 
 import android.os.Bundle
+import android.widget.ImageView
 import android.widget.LinearLayout
-import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 
 /**
@@ -15,14 +15,14 @@ class UserProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_profile)
 
+        setupNavigation()
         setupMenuClickListeners()
+    }
 
-        // Handle modern back press logic
-        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                finish()
-            }
-        })
+    private fun setupNavigation() {
+        findViewById<ImageView>(R.id.btn_back)?.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
     }
 
     private fun setupMenuClickListeners() {

@@ -1,6 +1,7 @@
 package com.example.smarthome
 
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -8,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
+import androidx.cardview.widget.CardView
 
 /**
  * AcControlActivity handles the UI logic for controlling the Air Conditioner.
@@ -17,6 +19,7 @@ import androidx.appcompat.widget.SwitchCompat
 class AcControlActivity : AppCompatActivity() {
 
     private var isDeviceOn: Boolean = false
+    private var temperature: Int = 24 // Default temperature
     private val deviceId = "AC_UNIT_1"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,6 +28,7 @@ class AcControlActivity : AppCompatActivity() {
 
         // Restore state from manager
         isDeviceOn = DeviceStateManager.getDeviceState(deviceId)
+        temperature = DeviceStateManager.getDeviceValue(deviceId, 24)
 
         setupUI()
         updateVisualState()
@@ -40,7 +44,7 @@ class AcControlActivity : AppCompatActivity() {
     private fun setupUI() {
         // Back Button Logic
         findViewById<ImageView>(R.id.iv_back_ac)?.setOnClickListener {
-            finish()
+            onBackPressedDispatcher.onBackPressed()
         }
 
         // Power Toggle Logic
@@ -63,11 +67,34 @@ class AcControlActivity : AppCompatActivity() {
             
             updateVisualState()
         }
+
+        // Temperature Control
+        val tvTemp = findViewById<TextView>(R.id.tv_temp)
+        val cvTempUp = findViewById<CardView>(R.id.iv_temp_up)
+        val cvTempDown = findViewById<CardView>(R.id.iv_temp_down)
+
+        tvTemp.text = "${temperature}°C"
+
+        cvTempUp.setOnClickListener {
+            if (isDeviceOn) {
+                temperature++
+                tvTemp.text = "${temperature}°C"
+                DeviceStateManager.setDeviceValue(deviceId, temperature)
+            }
+        }
+
+        cvTempDown.setOnClickListener {
+            if (isDeviceOn) {
+                temperature--
+                tvTemp.text = "${temperature}°C"
+                DeviceStateManager.setDeviceValue(deviceId, temperature)
+            }
+        }
     }
 
     private fun updateVisualState() {
-        val tempControl = findViewById<android.view.View>(R.id.fl_temp_control)
-        val modesContainer = findViewById<android.view.View>(R.id.ll_modes)
+        val tempControl = findViewById<View>(R.id.fl_temp_control)
+        val modesContainer = findViewById<View>(R.id.ll_modes)
         
         val alphaValue = if (isDeviceOn) 1.0f else 0.4f
         tempControl?.alpha = alphaValue

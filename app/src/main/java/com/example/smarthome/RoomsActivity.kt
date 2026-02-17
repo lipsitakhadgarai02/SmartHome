@@ -35,10 +35,9 @@ class RoomsActivity : AppCompatActivity() {
     }
 
     private fun setupNavigation() {
-        findViewById<ImageView>(R.id.btn_back)?.setOnClickListener { finish() }
-        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() { finish() }
-        })
+        findViewById<ImageView>(R.id.btn_back)?.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
     }
 
     private fun setupSearch() {

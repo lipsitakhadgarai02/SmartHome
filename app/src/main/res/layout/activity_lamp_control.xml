@@ -148,12 +148,14 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_intensity_label">
 
         <ImageView
+            android:id="@+id/iv_intensity_down"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_remove"
             app:tint="@color/black" />
 
         <SeekBar
+            android:id="@+id/sb_intensity"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -162,6 +164,7 @@
             android:thumbTint="@color/primary_teal" />
 
         <ImageView
+            android:id="@+id/iv_intensity_up"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_plus"

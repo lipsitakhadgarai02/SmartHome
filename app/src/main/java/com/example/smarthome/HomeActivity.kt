@@ -84,23 +84,23 @@ class HomeActivity : AppCompatActivity() {
 
     private fun setupBottomNavigation() {
         // Navigation using IDs from layout_bottom_nav.xml
-        findViewById<View>(R.id.ll_home)?.setOnClickListener {
+        findViewById<View>(R.id.nav_home)?.setOnClickListener {
             // Already on Home
         }
 
-        findViewById<View>(R.id.ll_rooms)?.setOnClickListener {
+        findViewById<View>(R.id.nav_search)?.setOnClickListener {
             startActivity(Intent(this, RoomsActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
             })
         }
 
-        findViewById<View>(R.id.ll_devices)?.setOnClickListener {
+        findViewById<View>(R.id.nav_devices)?.setOnClickListener {
             startActivity(Intent(this, DeviceScanActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
             })
         }
 
-        findViewById<View>(R.id.ll_settings)?.setOnClickListener {
+        findViewById<View>(R.id.nav_settings)?.setOnClickListener {
             startActivity(Intent(this, UserProfileActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
             })

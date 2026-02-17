@@ -3,6 +3,7 @@ package com.example.smarthome
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -17,6 +18,7 @@ import androidx.appcompat.widget.SwitchCompat
 class LampControlActivity : AppCompatActivity() {
 
     private var isDeviceOn: Boolean = false
+    private var intensity: Int = 80 // Default intensity
     private val deviceId = "LAMP_UNIT_1"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,8 +27,9 @@ class LampControlActivity : AppCompatActivity() {
 
         // Restore state from manager
         isDeviceOn = DeviceStateManager.getDeviceState(deviceId)
+        intensity = DeviceStateManager.getDeviceValue(deviceId, 80)
 
-        setupClickListeners()
+        setupUI()
         updateVisualState()
 
         // Implementing modern back press dispatcher
@@ -37,10 +40,10 @@ class LampControlActivity : AppCompatActivity() {
         })
     }
 
-    private fun setupClickListeners() {
+    private fun setupUI() {
         // Back Button
         findViewById<ImageView>(R.id.iv_back_lamp)?.setOnClickListener {
-            finish()
+            onBackPressedDispatcher.onBackPressed()
         }
 
         // Power Toggle Logic
@@ -63,16 +66,63 @@ class LampControlActivity : AppCompatActivity() {
             
             updateVisualState()
         }
+
+        // Intensity Control
+        val tvBrightness = findViewById<TextView>(R.id.tv_brightness_percent)
+        val sbIntensity = findViewById<SeekBar>(R.id.sb_intensity)
+        val ivUp = findViewById<ImageView>(R.id.iv_intensity_up)
+        val ivDown = findViewById<ImageView>(R.id.iv_intensity_down)
+
+        tvBrightness.text = "$intensity%"
+        sbIntensity.progress = intensity
+
+        sbIntensity.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (isDeviceOn) {
+                    intensity = progress
+                    tvBrightness.text = "$intensity%"
+                    DeviceStateManager.setDeviceValue(deviceId, intensity)
+                } else if (fromUser) {
+                    seekBar?.progress = intensity // Snap back if OFF
+                }
+            }
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
+
+        ivUp.setOnClickListener {
+            if (isDeviceOn && intensity < 100) {
+                intensity += 5
+                if (intensity > 100) intensity = 100
+                updateIntensityUI(tvBrightness, sbIntensity)
+            }
+        }
+
+        ivDown.setOnClickListener {
+            if (isDeviceOn && intensity > 0) {
+                intensity -= 5
+                if (intensity < 0) intensity = 0
+                updateIntensityUI(tvBrightness, sbIntensity)
+            }
+        }
+    }
+
+    private fun updateIntensityUI(tv: TextView, sb: SeekBar) {
+        tv.text = "$intensity%"
+        sb.progress = intensity
+        DeviceStateManager.setDeviceValue(deviceId, intensity)
     }
 
     private fun updateVisualState() {
         val lampVisual = findViewById<android.view.View>(R.id.fl_lamp_visual)
         val statsCard = findViewById<android.view.View>(R.id.ll_stats_card)
         val brightnessText = findViewById<android.view.View>(R.id.tv_brightness_percent)
+        val sliderContainer = findViewById<android.view.View>(R.id.sb_intensity)?.parent as? android.view.View
         
         val alphaValue = if (isDeviceOn) 1.0f else 0.4f
         lampVisual?.alpha = alphaValue
         statsCard?.alpha = alphaValue
         brightnessText?.alpha = alphaValue
+        sliderContainer?.alpha = alphaValue
     }
 }

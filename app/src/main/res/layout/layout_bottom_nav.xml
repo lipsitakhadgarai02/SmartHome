@@ -23,7 +23,7 @@
             android:orientation="horizontal">
 
             <LinearLayout
-                android:id="@+id/ll_home"
+                android:id="@+id/nav_home"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -47,7 +47,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/ll_rooms"
+                android:id="@+id/nav_search"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -56,14 +56,13 @@
                 android:clickable="true"
                 android:focusable="true">
                 <ImageView
-                    android:id="@+id/iv_rooms"
+                    android:id="@+id/iv_search"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_search"
                     app:tint="@color/gray_text" />
-
                 <TextView
-                    android:id="@+id/tv_rooms"
+                    android:id="@+id/tv_search"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Search"
@@ -72,7 +71,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/ll_devices"
+                android:id="@+id/nav_devices"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -96,7 +95,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/ll_settings"
+                android:id="@+id/nav_settings"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"

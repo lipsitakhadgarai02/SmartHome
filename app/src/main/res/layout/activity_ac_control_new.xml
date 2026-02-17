@@ -159,6 +159,7 @@
             android:background="@drawable/bg_remote_inner_circle" />
 
         <TextView
+            android:id="@+id/tv_temp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -179,6 +180,7 @@
         app:layout_constraintTop_toBottomOf="@+id/fl_temp_control">
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/iv_temp_down"
             android:layout_width="70dp"
             android:layout_height="100dp"
             app:cardCornerRadius="24dp"
@@ -193,6 +195,7 @@
         <View android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1" />
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/iv_temp_up"
             android:layout_width="70dp"
             android:layout_height="100dp"
             app:cardCornerRadius="24dp"
