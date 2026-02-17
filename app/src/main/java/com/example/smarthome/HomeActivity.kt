@@ -35,6 +35,50 @@ class HomeActivity : AppCompatActivity() {
         applyWindowInsets()
     }
 
+    override fun onResume() {
+        super.onResume()
+        syncDeviceStates()
+    }
+
+    private fun syncDeviceStates() {
+        // We will use direct references to the card views since we can find them via layout indices
+        // In activity_home.xml, the Paired Devices Grid is a LinearLayout (vertical) 
+        // containing two LinearLayouts (horizontal) for Row 1 and Row 2.
+        
+        val tvPaired = findViewById<View>(R.id.tv_paired)
+        val gridContainer = tvPaired?.parent as? ViewGroup
+        
+        // The LinearLayout containing the rows is the last child of the ConstraintLayout inside NestedScrollView
+        // But it's easier to find the parent of tv_paired and then find the grid.
+        // Looking at XML: tv_paired is at the same level as the grid.
+        
+        val parent = tvPaired?.parent as? ViewGroup
+        val grid = parent?.getChildAt(parent.indexOfChild(tvPaired) + 1) as? ViewGroup
+        
+        if (grid != null) {
+            // Row 1
+            val row1 = grid.getChildAt(0) as? ViewGroup
+            val acCard = row1?.getChildAt(0) as? CardView
+            val tvCard = row1?.getChildAt(1) as? CardView
+            
+            // Row 2
+            val row2 = grid.getChildAt(1) as? ViewGroup
+            val lightsCard = row2?.getChildAt(0) as? CardView
+            val fanCard = row2?.getChildAt(1) as? CardView
+
+            // Apply alpha based on state
+            updateDeviceUI("ac_living_room", acCard)
+            updateDeviceUI("tv_living_room", tvCard)
+            updateDeviceUI("lamp_bedroom", lightsCard)
+            updateDeviceUI("fan_unit_1", fanCard)
+        }
+    }
+
+    private fun updateDeviceUI(deviceId: String, card: CardView?) {
+        val isOn = DeviceStateManager.getDeviceState(deviceId)
+        card?.alpha = if (isOn) 1.0f else 0.5f
+    }
+
     private fun setupDrawer() {
         drawerLayout = findViewById(R.id.drawer_layout)
         val navigationView = findViewById<NavigationView>(R.id.navigation_view)
@@ -124,6 +168,20 @@ class HomeActivity : AppCompatActivity() {
 
         findViewById<ImageView>(R.id.iv_notification).setOnClickListener {
             navigateToNotifications()
+        }
+        
+        // Device Click Listeners (to make Home Screen interactive)
+        val tvPaired = findViewById<View>(R.id.tv_paired)
+        val parent = tvPaired?.parent as? ViewGroup
+        val grid = parent?.getChildAt(parent.indexOfChild(tvPaired) + 1) as? ViewGroup
+        
+        if (grid != null) {
+            val row1 = grid.getChildAt(0) as? ViewGroup
+            row1?.getChildAt(0)?.setOnClickListener { startActivity(Intent(this, AcControlActivity::class.java)) }
+            row1?.getChildAt(1)?.setOnClickListener { startActivity(Intent(this, TvRemoteActivity::class.java)) }
+            
+            val row2 = grid.getChildAt(1) as? ViewGroup
+            row2?.getChildAt(0)?.setOnClickListener { startActivity(Intent(this, LampControlActivity::class.java)) }
         }
     }
 

@@ -7,6 +7,7 @@ package com.example.smarthome
 object DeviceStateManager {
     private val deviceStates = mutableMapOf<String, Boolean>()
     private val deviceValues = mutableMapOf<String, Int>()
+    private val pairedDevices = mutableSetOf<String>()
 
     fun setDeviceState(deviceId: String, isOn: Boolean) {
         deviceStates[deviceId] = isOn
@@ -22,5 +23,17 @@ object DeviceStateManager {
 
     fun getDeviceValue(deviceId: String, defaultValue: Int = 0): Int {
         return deviceValues[deviceId] ?: defaultValue
+    }
+
+    fun pairDevice(deviceId: String) {
+        pairedDevices.add(deviceId)
+    }
+
+    fun isDevicePaired(deviceId: String): Boolean {
+        return pairedDevices.contains(deviceId)
+    }
+
+    fun getPairedDevices(): Set<String> {
+        return pairedDevices
     }
 }

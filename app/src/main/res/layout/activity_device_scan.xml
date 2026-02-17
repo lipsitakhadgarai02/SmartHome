@@ -87,12 +87,16 @@
 
             <!-- Scan Nearby Device Card -->
             <androidx.cardview.widget.CardView
+                android:id="@+id/cv_scan_nearby"
                 android:layout_width="match_parent"
                 android:layout_height="160dp"
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginTop="16dp"
                 app:cardCornerRadius="24dp"
-                app:cardElevation="0dp">
+                app:cardElevation="0dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
