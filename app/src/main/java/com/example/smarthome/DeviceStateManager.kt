@@ -8,7 +8,9 @@ object DeviceStateManager {
     private val deviceStates = mutableMapOf<String, Boolean>()
     private val deviceValues = mutableMapOf<String, Int>()
     private val pairedDevices = mutableSetOf<String>()
-    private val roomNames = mutableListOf<String>()
+    
+    // Room mapping: RoomName -> List of Device Types (AC, Light, Fan)
+    private val roomDevices = mutableMapOf<String, List<String>>()
     
     // Notification State
     var notificationCount: Int = 3
@@ -44,12 +46,16 @@ object DeviceStateManager {
         return pairedDevices
     }
 
-    fun addRoom(name: String) {
-        roomNames.add(name)
+    fun addRoom(name: String, devices: List<String>) {
+        roomDevices[name] = devices
     }
 
     fun getRooms(): List<String> {
-        return roomNames
+        return roomDevices.keys.toList()
+    }
+    
+    fun getDevicesInRoom(roomName: String): List<String> {
+        return roomDevices[roomName] ?: emptyList()
     }
     
     fun clearNotifications() {

@@ -106,9 +106,9 @@ class RoomsActivity : AppCompatActivity() {
         }
 
         // Setup click listeners for other static rooms
-        gridLayout.getChildAt(1)?.setOnClickListener { navigateToDevice("Lamp", LampControlActivity::class.java, "Bed Room") }
-        gridLayout.getChildAt(2)?.setOnClickListener { navigateToDevice("AC", AcControlActivity::class.java, "Kitchen") }
-        gridLayout.getChildAt(3)?.setOnClickListener { navigateToDevice("TV", TvRemoteActivity::class.java, "Living Room") }
+        gridLayout.getChildAt(1)?.setOnClickListener { navigateToRoomDetails("Bed Room") }
+        gridLayout.getChildAt(2)?.setOnClickListener { navigateToRoomDetails("Kitchen") }
+        gridLayout.getChildAt(3)?.setOnClickListener { navigateToRoomDetails("Living Room") }
 
         // Inflate and add newly created rooms from DeviceStateManager
         val inflater = LayoutInflater.from(this)
@@ -129,18 +129,16 @@ class RoomsActivity : AppCompatActivity() {
         
         // Count active accessories
         var activeCount = 0
-        if (DeviceStateManager.getDeviceState("${roomName}_AC")) activeCount++
-        if (DeviceStateManager.getDeviceState("${roomName}_Light")) activeCount++
-        if (DeviceStateManager.getDeviceState("${roomName}_Fan")) activeCount++
+        DeviceStateManager.getDevicesInRoom(roomName).forEach { _ -> activeCount++ }
         roomCard.findViewById<TextView>(R.id.tv_device_count).text = "$activeCount Devices"
 
         // Set Tag for filtering
         val container = roomCard.findViewById<View>(R.id.ll_room_container)
         container.tag = roomName
 
-        // Click logic (General remote for custom rooms)
+        // Click logic (Show details for custom rooms)
         roomCard.setOnClickListener {
-            navigateToDevice("Remote", TvRemoteActivity::class.java, roomName)
+            navigateToRoomDetails(roomName)
         }
 
         // Add to UI
@@ -165,11 +163,13 @@ class RoomsActivity : AppCompatActivity() {
         btnCreate.setOnClickListener {
             val roomName = etRoomName.text.toString().trim()
             if (roomName.isNotEmpty()) {
-                DeviceStateManager.addRoom(roomName)
-                DeviceStateManager.setDeviceState("${roomName}_AC", switchAc.isChecked)
-                DeviceStateManager.setDeviceState("${roomName}_Light", switchLight.isChecked)
-                DeviceStateManager.setDeviceState("${roomName}_Fan", switchFan.isChecked)
-
+                val devices = mutableListOf<String>()
+                if (switchAc.isChecked) devices.add("AC")
+                if (switchLight.isChecked) devices.add("Light")
+                if (switchFan.isChecked) devices.add("Fan")
+                
+                DeviceStateManager.addRoom(roomName, devices)
+                
                 Toast.makeText(this, "Room '$roomName' created successfully!", Toast.LENGTH_SHORT).show()
                 dialog.dismiss()
                 
@@ -183,9 +183,8 @@ class RoomsActivity : AppCompatActivity() {
         dialog.show()
     }
 
-    private fun navigateToDevice(type: String, target: Class<*>, roomName: String) {
-        startActivity(Intent(this, target).apply {
-            putExtra("DEVICE_TYPE", type)
+    private fun navigateToRoomDetails(roomName: String) {
+        startActivity(Intent(this, RoomDetailsActivity::class.java).apply {
             putExtra("ROOM_NAME", roomName)
         })
     }
