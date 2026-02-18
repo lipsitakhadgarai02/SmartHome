@@ -7,6 +7,19 @@
     android:background="@color/white"
     tools:context=".UserProfileActivity">
 
+    <!-- Back Button -->
+    <ImageView
+        android:id="@+id/btn_back"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:padding="12dp"
+        android:src="@drawable/ic_arrow_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/primary_teal" />
+
     <!-- Header / Profile Section -->
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_profile_pic"
@@ -37,6 +50,8 @@
         android:textColor="@color/primary_teal"
         android:textSize="20sp"
         android:textStyle="bold"
+        android:clickable="true"
+        android:focusable="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/cv_profile_pic" />
