@@ -8,6 +8,13 @@ object DeviceStateManager {
     private val deviceStates = mutableMapOf<String, Boolean>()
     private val deviceValues = mutableMapOf<String, Int>()
     private val pairedDevices = mutableSetOf<String>()
+    private val roomNames = mutableListOf<String>()
+    
+    // Notification State
+    var notificationCount: Int = 3
+        private set
+    var areNotificationsCleared: Boolean = false
+        private set
 
     fun setDeviceState(deviceId: String, isOn: Boolean) {
         deviceStates[deviceId] = isOn
@@ -35,5 +42,18 @@ object DeviceStateManager {
 
     fun getPairedDevices(): Set<String> {
         return pairedDevices
+    }
+
+    fun addRoom(name: String) {
+        roomNames.add(name)
+    }
+
+    fun getRooms(): List<String> {
+        return roomNames
+    }
+    
+    fun clearNotifications() {
+        notificationCount = 0
+        areNotificationsCleared = true
     }
 }

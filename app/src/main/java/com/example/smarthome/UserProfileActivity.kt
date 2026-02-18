@@ -1,10 +1,11 @@
 package com.example.smarthome
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
-import android.view.ViewGroup
+import android.view.KeyEvent
+import android.view.inputmethod.EditorInfo
 import android.widget.EditText
-import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -14,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 
 /**
  * UserProfileActivity handles the user's profile and settings menu.
- * This version includes simulated behavior for demo purposes.
+ * This version allows editing the profile name directly on the screen.
  */
 class UserProfileActivity : AppCompatActivity() {
 
@@ -24,6 +25,7 @@ class UserProfileActivity : AppCompatActivity() {
 
         setupNavigation()
         setupMenuClickListeners()
+        setupProfileEditing()
     }
 
     private fun setupNavigation() {
@@ -33,10 +35,37 @@ class UserProfileActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupProfileEditing() {
+        val etProfileName = findViewById<EditText>(R.id.tv_profile_name)
+        
+        etProfileName?.setOnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE || 
+                (event != null && event.keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN)) {
+                
+                val newName = etProfileName.text.toString()
+                if (newName.isNotBlank()) {
+                    Toast.makeText(this, "Profile name updated to: $newName", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "Name cannot be empty", Toast.LENGTH_SHORT).show()
+                }
+                etProfileName.clearFocus()
+                false // Let the system hide the keyboard
+            } else {
+                false
+            }
+        }
+    }
+
     private fun setupMenuClickListeners() {
-        // Profile Name Click
-        findViewById<TextView>(R.id.tv_profile_name)?.setOnClickListener {
-            Toast.makeText(this, "Profile editing disabled in demo", Toast.LENGTH_SHORT).show()
+        // Manage Home
+        findViewById<LinearLayout>(R.id.item_manage_home)?.setOnClickListener {
+            // Navigate to RoomsActivity which handles room management
+            startActivity(Intent(this, RoomsActivity::class.java))
+        }
+
+        // Notifications Settings
+        findViewById<LinearLayout>(R.id.item_notifications_settings)?.setOnClickListener {
+            startActivity(Intent(this, AccountManagementActivity::class.java))
         }
 
         // Privacy Policy

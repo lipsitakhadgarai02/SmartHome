@@ -53,9 +53,12 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <View
+            android:id="@+id/btn_ok"
             android:layout_width="110dp"
             android:layout_height="110dp"
             android:background="@drawable/bg_remote_inner_circle"
+            android:clickable="true"
+            android:focusable="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -63,33 +66,45 @@
 
         <!-- Directional dots -->
         <View
-            android:layout_width="8dp"
-            android:layout_height="8dp"
+            android:id="@+id/btn_up"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:background="@drawable/bg_remote_inner_circle"
+            android:clickable="true"
+            android:focusable="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/remote_outer_ring" android:layout_marginTop="16dp"/>
+            app:layout_constraintTop_toTopOf="@+id/remote_outer_ring" android:layout_marginTop="8dp"/>
         <View
-            android:layout_width="8dp"
-            android:layout_height="8dp"
+            android:id="@+id/btn_down"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:background="@drawable/bg_remote_inner_circle"
+            android:clickable="true"
+            android:focusable="true"
             app:layout_constraintBottom_toBottomOf="@+id/remote_outer_ring"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginBottom="16dp"/>
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginBottom="8dp"/>
         <View
-            android:layout_width="8dp"
-            android:layout_height="8dp"
+            android:id="@+id/btn_left"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:background="@drawable/bg_remote_inner_circle"
+            android:clickable="true"
+            android:focusable="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/remote_outer_ring"
-            app:layout_constraintTop_toTopOf="parent" android:layout_marginStart="16dp"/>
+            app:layout_constraintTop_toTopOf="parent" android:layout_marginStart="8dp"/>
         <View
-            android:layout_width="8dp"
-            android:layout_height="8dp"
+            android:id="@+id/btn_right"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:background="@drawable/bg_remote_inner_circle"
+            android:clickable="true"
+            android:focusable="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/remote_outer_ring"
-            app:layout_constraintTop_toTopOf="parent" android:layout_marginEnd="16dp"/>
+            app:layout_constraintTop_toTopOf="parent" android:layout_marginEnd="8dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -108,24 +123,29 @@
         app:layout_constraintTop_toBottomOf="@+id/dpad_container">
 
         <ImageButton
+            android:id="@+id/btn_remote_back"
             style="@style/RemoteButton"
             android:src="@drawable/ic_arrow_back" />
 
         <ImageButton
+            android:id="@+id/btn_remote_tv"
             style="@style/RemoteButton"
             android:src="@drawable/ic_tv" />
 
         <ImageButton
+            android:id="@+id/btn_remote_play"
             style="@style/RemoteButton"
             android:src="@drawable/ic_play" />
 
         <ImageButton
+            android:id="@+id/btn_remote_mute"
             style="@style/RemoteButton"
             android:src="@drawable/ic_volume_off" />
 
     </GridLayout>
 
     <LinearLayout
+        android:id="@+id/ll_volume_container"
         android:layout_width="70dp"
         android:layout_height="140dp"
         android:layout_marginTop="72dp"
@@ -137,10 +157,13 @@
         app:layout_constraintTop_toBottomOf="@+id/dpad_container">
 
         <ImageView
+            android:id="@+id/iv_vol_up"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_plus"
-            app:tint="@color/primary_teal" />
+            app:tint="@color/primary_teal"
+            android:clickable="true"
+            android:focusable="true"/>
 
         <View
             android:layout_width="1dp"
@@ -149,12 +172,28 @@
             android:background="#E0E0E0" />
 
         <ImageView
+            android:id="@+id/iv_vol_down"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_remove"
-            app:tint="@color/primary_teal" />
+            app:tint="@color/primary_teal"
+            android:clickable="true"
+            android:focusable="true"/>
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_volume_level"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Vol: 25"
+        android:textColor="@color/primary_teal"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="@+id/ll_volume_container"
+        app:layout_constraintStart_toStartOf="@+id/ll_volume_container"
+        app:layout_constraintTop_toBottomOf="@+id/ll_volume_container" />
 
     <ImageButton
         android:id="@+id/iv_power"
@@ -163,13 +202,5 @@
         app:tint="@color/primary_teal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/dpad_container" android:layout_marginEnd="32dp"/>
-
-    <ImageButton
-        android:id="@+id/iv_search"
-        style="@style/RemoteButton.Circular"
-        android:src="@drawable/ic_search"
-        app:tint="@color/primary_teal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/dpad_container" android:layout_marginStart="32dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

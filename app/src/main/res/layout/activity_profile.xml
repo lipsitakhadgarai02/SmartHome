@@ -157,7 +157,7 @@
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:src="@drawable/ic_sofa"
+                        android:src="@drawable/ic_rooms"
                         app:tint="@color/primary_teal" />
 
                     <TextView
@@ -228,7 +228,7 @@
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:src="@drawable/ic_ac"
+                        android:src="@drawable/ic_rooms"
                         app:tint="@color/primary_teal" />
 
                     <TextView
@@ -299,7 +299,7 @@
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:src="@drawable/ic_sofa"
+                        android:src="@drawable/ic_rooms"
                         app:tint="@color/primary_teal" />
 
                     <TextView

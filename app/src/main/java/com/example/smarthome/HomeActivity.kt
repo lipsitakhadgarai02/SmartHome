@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -38,35 +39,35 @@ class HomeActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         syncDeviceStates()
+        updateNotificationBadge()
+    }
+
+    private fun updateNotificationBadge() {
+        val badge = findViewById<TextView>(R.id.tv_notification_badge)
+        val count = DeviceStateManager.notificationCount
+        
+        if (count > 0 && !DeviceStateManager.areNotificationsCleared) {
+            badge?.text = count.toString()
+            badge?.visibility = View.VISIBLE
+        } else {
+            badge?.visibility = View.GONE
+        }
     }
 
     private fun syncDeviceStates() {
-        // We will use direct references to the card views since we can find them via layout indices
-        // In activity_home.xml, the Paired Devices Grid is a LinearLayout (vertical) 
-        // containing two LinearLayouts (horizontal) for Row 1 and Row 2.
-        
         val tvPaired = findViewById<View>(R.id.tv_paired)
-        val gridContainer = tvPaired?.parent as? ViewGroup
-        
-        // The LinearLayout containing the rows is the last child of the ConstraintLayout inside NestedScrollView
-        // But it's easier to find the parent of tv_paired and then find the grid.
-        // Looking at XML: tv_paired is at the same level as the grid.
-        
         val parent = tvPaired?.parent as? ViewGroup
         val grid = parent?.getChildAt(parent.indexOfChild(tvPaired) + 1) as? ViewGroup
         
         if (grid != null) {
-            // Row 1
             val row1 = grid.getChildAt(0) as? ViewGroup
             val acCard = row1?.getChildAt(0) as? CardView
             val tvCard = row1?.getChildAt(1) as? CardView
             
-            // Row 2
             val row2 = grid.getChildAt(1) as? ViewGroup
             val lightsCard = row2?.getChildAt(0) as? CardView
             val fanCard = row2?.getChildAt(1) as? CardView
 
-            // Apply alpha based on state
             updateDeviceUI("ac_living_room", acCard)
             updateDeviceUI("tv_living_room", tvCard)
             updateDeviceUI("lamp_bedroom", lightsCard)
@@ -84,40 +85,35 @@ class HomeActivity : AppCompatActivity() {
         val navigationView = findViewById<NavigationView>(R.id.navigation_view)
         val ivMenu = findViewById<ImageView>(R.id.iv_menu)
 
-        // Hamburger Click - Open Drawer
         ivMenu.setOnClickListener {
             drawerLayout.openDrawer(GravityCompat.START)
         }
 
         navigationView.setNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.drawer_home -> {
-                    // Already on Home
-                }
+                R.id.drawer_home -> {}
                 R.id.drawer_devices -> {
-                    val intent = Intent(this, DeviceScanActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-                    startActivity(intent)
+                    startActivity(Intent(this, DeviceScanActivity::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+                    })
                 }
                 R.id.drawer_add_device -> {
-                    val intent = Intent(this, DeviceScanActivity::class.java).apply {
+                    startActivity(Intent(this, DeviceScanActivity::class.java).apply {
                         putExtra("SCAN_MODE", "QR_CODE")
                         flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-                    }
-                    startActivity(intent)
+                    })
                 }
                 R.id.drawer_automations -> {
-                    val intent = Intent(this, DeviceManagementActivity::class.java).apply {
+                    startActivity(Intent(this, DeviceManagementActivity::class.java).apply {
                         putExtra("FLOW_TYPE", "AUTOMATION")
                         flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-                    }
-                    startActivity(intent)
+                    })
                 }
                 R.id.drawer_notifications -> navigateToNotifications()
                 R.id.drawer_settings -> {
-                    val intent = Intent(this, UserProfileActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-                    startActivity(intent)
+                    startActivity(Intent(this, UserProfileActivity::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+                    })
                 }
                 R.id.drawer_logout -> performLogout()
             }
@@ -127,23 +123,17 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun setupBottomNavigation() {
-        // Navigation using IDs from layout_bottom_nav.xml
-        findViewById<View>(R.id.nav_home)?.setOnClickListener {
-            // Already on Home
-        }
-
+        findViewById<View>(R.id.nav_home)?.setOnClickListener {}
         findViewById<View>(R.id.nav_search)?.setOnClickListener {
             startActivity(Intent(this, RoomsActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
             })
         }
-
         findViewById<View>(R.id.nav_devices)?.setOnClickListener {
             startActivity(Intent(this, DeviceScanActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
             })
         }
-
         findViewById<View>(R.id.nav_settings)?.setOnClickListener {
             startActivity(Intent(this, UserProfileActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
@@ -166,11 +156,10 @@ class HomeActivity : AppCompatActivity() {
             })
         }
 
-        findViewById<ImageView>(R.id.iv_notification).setOnClickListener {
+        findViewById<View>(R.id.fl_notification_container)?.setOnClickListener {
             navigateToNotifications()
         }
         
-        // Device Click Listeners (to make Home Screen interactive)
         val tvPaired = findViewById<View>(R.id.tv_paired)
         val parent = tvPaired?.parent as? ViewGroup
         val grid = parent?.getChildAt(parent.indexOfChild(tvPaired) + 1) as? ViewGroup
@@ -187,14 +176,11 @@ class HomeActivity : AppCompatActivity() {
 
     private fun applyWindowInsets() {
         val bottomNavContainer = findViewById<View>(R.id.cv_bottom_nav)
-
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content)) { _, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            
             bottomNavContainer?.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                 bottomInsets(systemBars.bottom)
             }
-            
             insets
         }
     }

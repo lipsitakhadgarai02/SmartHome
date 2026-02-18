@@ -1,13 +1,16 @@
 package com.example.smarthome
 
 import android.os.Bundle
+import android.view.View
+import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 
 /**
- * AccountManagementActivity allows users to manage their profile, home settings, and notifications.
- * This screen is designed as an independent module.
+ * AccountManagementActivity serves as the dedicated Notifications screen.
  */
 class AccountManagementActivity : AppCompatActivity() {
 
@@ -15,7 +18,8 @@ class AccountManagementActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_account_management)
 
-        setupClickListeners()
+        setupNavigation()
+        setupNotificationActions()
 
         // Modern back press handling
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
@@ -25,12 +29,23 @@ class AccountManagementActivity : AppCompatActivity() {
         })
     }
 
-    private fun setupClickListeners() {
-        // Close Button Logic
+    private fun setupNavigation() {
+        // Back Button Logic (btn_close_account is the back arrow in this version)
         findViewById<ImageView>(R.id.btn_close_account)?.setOnClickListener {
-            finish()
+            onBackPressedDispatcher.onBackPressed()
         }
+    }
 
-        // Additional menu item logic can be added here
+    private fun setupNotificationActions() {
+        val clearAllButton = findViewById<Button>(R.id.btn_clear_notifications)
+        val notificationList = findViewById<LinearLayout>(R.id.ll_notification_list)
+
+        clearAllButton?.setOnClickListener {
+            // Hide the notifications and show feedback
+            notificationList?.visibility = View.GONE
+            Toast.makeText(this, "All notifications cleared", Toast.LENGTH_SHORT).show()
+            
+            // Optionally, we could show a "No notifications" placeholder here
+        }
     }
 }
