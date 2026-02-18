@@ -17,6 +17,10 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import kotlin.random.Random
 
 class HomeActivity : AppCompatActivity() {
 
@@ -31,6 +35,8 @@ class HomeActivity : AppCompatActivity() {
         setupBottomNavigation()
         setupClickListeners()
         handleBackNavigation()
+        setupRealTimeDate()
+        setupDynamicWeather()
         
         // Fix for 3-button navigation spacing and icon clipping
         applyWindowInsets()
@@ -40,6 +46,23 @@ class HomeActivity : AppCompatActivity() {
         super.onResume()
         syncDeviceStates()
         updateNotificationBadge()
+    }
+
+    private fun setupRealTimeDate() {
+        val tvDate = findViewById<TextView>(R.id.tv_card_date)
+        val sdf = SimpleDateFormat("dd MMMM, yyyy", Locale.getDefault())
+        tvDate?.text = sdf.format(Date())
+    }
+
+    private fun setupDynamicWeather() {
+        val tvTemp = findViewById<TextView>(R.id.tv_home_temp)
+        val tvHumidity = findViewById<TextView>(R.id.tv_home_humidity)
+
+        val temp = Random.nextInt(20, 41) // Generates a random integer between 20 and 40
+        val humidity = Random.nextInt(30, 81) // Generates a random integer between 30 and 80
+
+        tvTemp?.text = "${temp}°"
+        tvHumidity?.text = "Humidity: ${humidity}%"
     }
 
     private fun updateNotificationBadge() {

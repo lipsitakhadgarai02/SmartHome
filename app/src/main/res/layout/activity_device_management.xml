@@ -115,7 +115,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="24dp"
-                android:text="01:28:00 PM"
+                android:text=""
                 android:textColor="@color/black"
                 android:textSize="14sp"
                 android:textStyle="bold"
@@ -352,14 +352,16 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Smart Fan"
+                        android:text="Air Conditioner"
                         android:textColor="@color/black"
                         android:textStyle="bold" />
                     <androidx.appcompat.widget.SwitchCompat
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
-                        android:checked="false" />
+                        android:checked="false"
+                        app:thumbTint="@color/primary_teal"
+                        app:trackTint="#B2DFDB" />
                 </RelativeLayout>
 
             </LinearLayout>
