@@ -105,10 +105,18 @@ class RoomsActivity : AppCompatActivity() {
             showCreateRoomDialog()
         }
 
-        // Setup click listeners for other static rooms
-        gridLayout.getChildAt(1)?.setOnClickListener { navigateToRoomDetails("Bed Room") }
-        gridLayout.getChildAt(2)?.setOnClickListener { navigateToRoomDetails("Kitchen") }
-        gridLayout.getChildAt(3)?.setOnClickListener { navigateToRoomDetails("Living Room") }
+        // Setup click listeners for other static rooms and fix device counts
+        val bedRoomCard = gridLayout.getChildAt(1) as? ViewGroup
+        updateStaticDeviceCount(bedRoomCard, "1 Device")
+        bedRoomCard?.setOnClickListener { navigateToRoomDetails("Bed Room") }
+
+        val kitchenCard = gridLayout.getChildAt(2) as? ViewGroup
+        updateStaticDeviceCount(kitchenCard, "1 Device")
+        kitchenCard?.setOnClickListener { navigateToRoomDetails("Kitchen") }
+
+        val livingRoomCard = gridLayout.getChildAt(3) as? ViewGroup
+        updateStaticDeviceCount(livingRoomCard, "1 Device")
+        livingRoomCard?.setOnClickListener { navigateToRoomDetails("Living Room") }
 
         // Inflate and add newly created rooms from DeviceStateManager
         val inflater = LayoutInflater.from(this)
@@ -120,6 +128,12 @@ class RoomsActivity : AppCompatActivity() {
         }
     }
 
+    private fun updateStaticDeviceCount(card: ViewGroup?, text: String) {
+        val linearLayout = card?.getChildAt(0) as? ViewGroup
+        val tvCount = linearLayout?.getChildAt(3) as? TextView
+        tvCount?.text = text
+    }
+
     private fun addNewRoomCard(gridLayout: GridLayout, inflater: LayoutInflater, roomName: String) {
         val roomCard = inflater.inflate(R.layout.item_room_card, gridLayout, false)
         
@@ -128,9 +142,9 @@ class RoomsActivity : AppCompatActivity() {
         roomCard.findViewById<TextView>(R.id.tv_room_category).text = "Custom Room"
         
         // Count active accessories
-        var activeCount = 0
-        DeviceStateManager.getDevicesInRoom(roomName).forEach { _ -> activeCount++ }
-        roomCard.findViewById<TextView>(R.id.tv_device_count).text = "$activeCount Devices"
+        val devices = DeviceStateManager.getDevicesInRoom(roomName)
+        val activeCount = devices.size
+        roomCard.findViewById<TextView>(R.id.tv_device_count).text = "$activeCount Device${if (activeCount != 1) "s" else ""}"
 
         // Set Tag for filtering
         val container = roomCard.findViewById<View>(R.id.ll_room_container)

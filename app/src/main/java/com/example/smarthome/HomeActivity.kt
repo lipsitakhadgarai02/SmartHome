@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -99,8 +100,8 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun updateDeviceUI(deviceId: String, card: CardView?) {
-        val isOn = DeviceStateManager.getDeviceState(deviceId)
-        card?.alpha = if (isOn) 1.0f else 0.5f
+        val isPaired = DeviceStateManager.isDevicePaired(deviceId)
+        card?.alpha = if (isPaired) 1.0f else 0.5f
     }
 
     private fun setupDrawer() {
@@ -189,12 +190,67 @@ class HomeActivity : AppCompatActivity() {
         
         if (grid != null) {
             val row1 = grid.getChildAt(0) as? ViewGroup
-            row1?.getChildAt(0)?.setOnClickListener { startActivity(Intent(this, AcControlActivity::class.java)) }
-            row1?.getChildAt(1)?.setOnClickListener { startActivity(Intent(this, TvRemoteActivity::class.java)) }
+            // AC
+            row1?.getChildAt(0)?.setOnClickListener { 
+                handleDeviceNavigation("ac_living_room", "Air Conditioner", AcControlActivity::class.java)
+            }
+            // TV
+            row1?.getChildAt(1)?.setOnClickListener { 
+                handleDeviceNavigation("tv_living_room", "Smart TV", TvRemoteActivity::class.java)
+            }
             
             val row2 = grid.getChildAt(1) as? ViewGroup
-            row2?.getChildAt(0)?.setOnClickListener { startActivity(Intent(this, LampControlActivity::class.java)) }
+            // Lamp
+            row2?.getChildAt(0)?.setOnClickListener { 
+                handleDeviceNavigation("lamp_bedroom", "Lamp", LampControlActivity::class.java)
+            }
+            // Fan
+            row2?.getChildAt(1)?.setOnClickListener { 
+                handleDeviceNavigation("fan_unit_1", "Smart Fan", FanControlActivity::class.java)
+            }
+
+            // Long click for unpairing
+            row1?.getChildAt(0)?.setOnLongClickListener { showUnpairingDialog("Air Conditioner", "ac_living_room"); true }
+            row1?.getChildAt(1)?.setOnLongClickListener { showUnpairingDialog("Smart TV", "tv_living_room"); true }
+            row2?.getChildAt(0)?.setOnLongClickListener { showUnpairingDialog("Lamp", "lamp_bedroom"); true }
+            row2?.getChildAt(1)?.setOnLongClickListener { showUnpairingDialog("Smart Fan", "fan_unit_1"); true }
         }
+    }
+
+    private fun handleDeviceNavigation(deviceId: String, name: String, target: Class<*>) {
+        if (DeviceStateManager.isDevicePaired(deviceId)) {
+            startActivity(Intent(this, target).apply {
+                putExtra("DEVICE_ID", deviceId)
+            })
+        } else {
+            showPairingDialog(name, deviceId)
+        }
+    }
+
+    private fun showPairingDialog(deviceName: String, deviceId: String) {
+        AlertDialog.Builder(this)
+            .setTitle("Pair Device")
+            .setMessage("Would you like to pair with $deviceName?")
+            .setPositiveButton("Pair") { _, _ ->
+                DeviceStateManager.pairDevice(deviceId)
+                Toast.makeText(this, "$deviceName paired successfully!", Toast.LENGTH_SHORT).show()
+                syncDeviceStates()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun showUnpairingDialog(deviceName: String, deviceId: String) {
+        AlertDialog.Builder(this)
+            .setTitle("Unpair Device")
+            .setMessage("Are you sure you want to unpair $deviceName?")
+            .setPositiveButton("Unpair") { _, _ ->
+                DeviceStateManager.unpairDevice(deviceId)
+                Toast.makeText(this, "$deviceName unpaired.", Toast.LENGTH_SHORT).show()
+                syncDeviceStates()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
     private fun applyWindowInsets() {

@@ -7,8 +7,11 @@
     <color name="background_light">#F5F7F7</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
-    <color name="gray_text">#757575</color>
+    <!-- Darkened grey for better visibility -->
+    <color name="gray_text">#262626</color>
     <color name="light_gray">#E0E0E0</color>
     <color name="accent_green">#1DE9B6</color>
     <color name="blob_teal_light">#80B2DFDB</color>
+    <!-- Updated Card Color to blend with doodle background -->
+    <color name="glass_green">#D1E9E9</color>
 </resources>

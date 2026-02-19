@@ -38,6 +38,10 @@ object DeviceStateManager {
         pairedDevices.add(deviceId)
     }
 
+    fun unpairDevice(deviceId: String) {
+        pairedDevices.remove(deviceId)
+    }
+
     fun isDevicePaired(deviceId: String): Boolean {
         return pairedDevices.contains(deviceId)
     }

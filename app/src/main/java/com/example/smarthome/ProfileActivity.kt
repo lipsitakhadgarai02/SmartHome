@@ -12,7 +12,7 @@ class ProfileActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search)
+        setContentView(R.layout.activity_user_profile)
 
         setupClickListeners()
         
@@ -22,6 +22,6 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun setupClickListeners() {
-        findViewById<ImageView>(R.id.iv_back_search)?.setOnClickListener { finish() }
+        findViewById<ImageView>(R.id.btn_back)?.setOnClickListener { finish() }
     }
 }

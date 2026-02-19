@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_light">
+    android:background="@drawable/background">
 
     <!-- Top Navigation Bar -->
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -161,7 +161,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="56dp"
-                        android:background="@color/white"
+                        android:background="@color/glass_green"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
                         android:paddingHorizontal="12dp">
@@ -177,6 +177,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
                             android:text="Air Conditioner"
+                            android:textColor="@color/black"
                             android:textSize="12sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -194,7 +195,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="56dp"
-                        android:background="@color/white"
+                        android:background="@color/glass_green"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
                         android:paddingHorizontal="12dp">
@@ -210,6 +211,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
                             android:text="Smart Bulb"
+                            android:textColor="@color/black"
                             android:textSize="12sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -227,7 +229,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="56dp"
-                        android:background="@color/white"
+                        android:background="@color/glass_green"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
                         android:paddingHorizontal="12dp">
@@ -243,6 +245,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
                             android:text="Smart TV"
+                            android:textColor="@color/black"
                             android:textSize="12sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -260,7 +263,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="56dp"
-                        android:background="@color/white"
+                        android:background="@color/glass_green"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
                         android:paddingHorizontal="12dp">
@@ -268,7 +271,7 @@
                         <ImageView
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:src="@drawable/ic_launcher_foreground"
+                            android:src="@drawable/ic_fan"
                             app:tint="@color/primary_teal" />
 
                         <TextView
@@ -276,6 +279,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
                             android:text="Smart Fan"
+                            android:textColor="@color/black"
                             android:textSize="12sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -293,7 +297,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="56dp"
-                        android:background="@color/white"
+                        android:background="@color/glass_green"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
                         android:paddingHorizontal="12dp">
@@ -309,6 +313,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
                             android:text="Smart Speaker"
+                            android:textColor="@color/black"
                             android:textSize="12sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -326,7 +331,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="56dp"
-                        android:background="@color/white"
+                        android:background="@color/glass_green"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
                         android:paddingHorizontal="12dp">
@@ -342,105 +347,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
                             android:text="Smart Lamp"
-                            android:textSize="12sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-                <!-- Washing Machine -->
-                <androidx.cardview.widget.CardView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_columnWeight="1"
-                    android:layout_margin="8dp"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="0dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="56dp"
-                        android:background="@color/white"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingHorizontal="12dp">
-
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/ic_washing_machine"
-                            app:tint="@color/primary_teal" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="12dp"
-                            android:text="Washing Machine"
-                            android:textSize="12sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-                <!-- Wi-Fi -->
-                <androidx.cardview.widget.CardView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_columnWeight="1"
-                    android:layout_margin="8dp"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="0dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="56dp"
-                        android:background="@color/white"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingHorizontal="12dp">
-
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/ic_wifi"
-                            app:tint="@color/primary_teal" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="12dp"
-                            android:text="Wi-Fi"
-                            android:textSize="12sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-                <!-- DVD Player -->
-                <androidx.cardview.widget.CardView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_columnWeight="1"
-                    android:layout_margin="8dp"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="0dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="56dp"
-                        android:background="@color/white"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingHorizontal="12dp">
-
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/ic_dvd_player"
-                            app:tint="@color/primary_teal" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="12dp"
-                            android:text="DVD Player"
+                            android:textColor="@color/black"
                             android:textSize="12sp"
                             android:textStyle="bold" />
                     </LinearLayout>

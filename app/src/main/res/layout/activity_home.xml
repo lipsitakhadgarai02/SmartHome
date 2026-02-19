@@ -4,7 +4,7 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_light">
+    android:background="@drawable/background">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -244,7 +244,7 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="@color/white"
+                            android:background="@color/glass_green"
                             android:gravity="center_vertical"
                             android:padding="12dp">
                             <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_lightning" />
@@ -265,7 +265,7 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="@color/white"
+                            android:background="@color/glass_green"
                             android:gravity="center_vertical"
                             android:padding="12dp">
                             <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_lightning" />
@@ -326,7 +326,7 @@
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:background="@color/white"
+                                android:background="@color/glass_green"
                                 android:gravity="center"
                                 android:orientation="vertical">
                                 <ImageView
@@ -352,7 +352,7 @@
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:background="@color/white"
+                                android:background="@color/glass_green"
                                 android:gravity="center"
                                 android:orientation="vertical">
                                 <ImageView
@@ -385,7 +385,7 @@
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:background="@color/white"
+                                android:background="@color/glass_green"
                                 android:gravity="center"
                                 android:orientation="vertical">
                                 <ImageView
@@ -411,13 +411,13 @@
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:background="@color/white"
+                                android:background="@color/glass_green"
                                 android:gravity="center"
                                 android:orientation="vertical">
                                 <ImageView
                                     android:layout_width="60dp"
                                     android:layout_height="60dp"
-                                    android:src="@drawable/ic_launcher_foreground"
+                                    android:src="@drawable/ic_fan"
                                     app:tint="@color/primary_teal"/>
                                 <TextView
                                     android:layout_width="wrap_content"

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FAFAFA"
+    android:background="@drawable/background"
     tools:context=".RoomsActivity">
 
     <!-- Header Section -->
@@ -40,7 +40,7 @@
         android:layout_height="50dp"
         android:layout_marginHorizontal="24dp"
         android:layout_marginTop="12dp"
-        android:background="@drawable/bg_search_bar_rooms"
+        android:background="@drawable/bg_edittext"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingHorizontal="16dp"
@@ -135,7 +135,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="create rooms here !"
-                        android:textColor="#A0A0A0"
+                        android:textColor="@color/gray_text"
                         android:textSize="11sp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -176,14 +176,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Living Room"
-                        android:textColor="#707070"
+                        android:textColor="@color/gray_text"
                         android:textSize="11sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Device 5"
-                        android:textColor="#A0A0A0"
+                        android:textColor="@color/gray_text"
                         android:textSize="9sp" />
 
                     <LinearLayout
@@ -204,7 +204,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
                             android:text="OFF"
-                            android:textColor="#707070"
+                            android:textColor="@color/gray_text"
                             android:textSize="12sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -247,14 +247,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Living Room"
-                        android:textColor="#707070"
+                        android:textColor="@color/gray_text"
                         android:textSize="11sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Device 5"
-                        android:textColor="#A0A0A0"
+                        android:textColor="@color/gray_text"
                         android:textSize="9sp" />
 
                     <LinearLayout
@@ -275,7 +275,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
                             android:text="OFF"
-                            android:textColor="#707070"
+                            android:textColor="@color/gray_text"
                             android:textSize="12sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -318,14 +318,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Living Room"
-                        android:textColor="#707070"
+                        android:textColor="@color/gray_text"
                         android:textSize="11sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Device 10"
-                        android:textColor="#A0A0A0"
+                        android:textColor="@color/gray_text"
                         android:textSize="9sp" />
 
                     <LinearLayout
@@ -346,7 +346,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
                             android:text="OFF"
-                            android:textColor="#707070"
+                            android:textColor="@color/gray_text"
                             android:textSize="12sp"
                             android:textStyle="bold" />
                     </LinearLayout>
