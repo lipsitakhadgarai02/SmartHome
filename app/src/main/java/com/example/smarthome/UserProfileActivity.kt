@@ -12,6 +12,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
 
 /**
  * UserProfileActivity handles the user's profile and settings menu.
@@ -26,6 +27,20 @@ class UserProfileActivity : AppCompatActivity() {
         setupNavigation()
         setupMenuClickListeners()
         setupProfileEditing()
+        updateUserInfo()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateUserInfo()
+    }
+
+    private fun updateUserInfo() {
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        if (currentUser != null) {
+            val etProfileName = findViewById<EditText>(R.id.tv_profile_name)
+            etProfileName?.setText(currentUser.displayName ?: currentUser.email?.split("@")?.get(0) ?: "User")
+        }
     }
 
     private fun setupNavigation() {
@@ -38,7 +53,7 @@ class UserProfileActivity : AppCompatActivity() {
     private fun setupProfileEditing() {
         val etProfileName = findViewById<EditText>(R.id.tv_profile_name)
         
-        etProfileName?.setOnEditorActionListener { v, actionId, event ->
+        etProfileName?.setOnEditorActionListener { _, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE || 
                 (event != null && event.keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN)) {
                 

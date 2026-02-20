@@ -18,6 +18,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -38,6 +39,7 @@ class HomeActivity : AppCompatActivity() {
         handleBackNavigation()
         setupRealTimeDate()
         setupDynamicWeather()
+        updateUserInfo()
         
         // Fix for 3-button navigation spacing and icon clipping
         applyWindowInsets()
@@ -47,23 +49,25 @@ class HomeActivity : AppCompatActivity() {
         super.onResume()
         syncDeviceStates()
         updateNotificationBadge()
+        updateUserInfo()
     }
 
-    private fun setupRealTimeDate() {
-        val tvDate = findViewById<TextView>(R.id.tv_card_date)
-        val sdf = SimpleDateFormat("dd MMMM, yyyy", Locale.getDefault())
-        tvDate?.text = sdf.format(Date())
-    }
+    private fun updateUserInfo() {
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        if (currentUser != null) {
+            val tvUserName = findViewById<TextView>(R.id.tv_user_name)
+            val name = currentUser.displayName ?: currentUser.email?.split("@")?.get(0) ?: "User"
+            tvUserName?.text = name
 
-    private fun setupDynamicWeather() {
-        val tvTemp = findViewById<TextView>(R.id.tv_home_temp)
-        val tvHumidity = findViewById<TextView>(R.id.tv_home_humidity)
-
-        val temp = Random.nextInt(20, 41) // Generates a random integer between 20 and 40
-        val humidity = Random.nextInt(30, 81) // Generates a random integer between 30 and 80
-
-        tvTemp?.text = "${temp}°"
-        tvHumidity?.text = "Humidity: ${humidity}%"
+            // Update Drawer Header
+            val navigationView = findViewById<NavigationView>(R.id.navigation_view)
+            val headerView = navigationView.getHeaderView(0)
+            val tvHeaderName = headerView.findViewById<TextView>(R.id.tv_header_name)
+            val tvHeaderEmail = headerView.findViewById<TextView>(R.id.tv_header_email)
+            
+            tvHeaderName?.text = name
+            tvHeaderEmail?.text = currentUser.email ?: ""
+        }
     }
 
     private fun updateNotificationBadge() {
@@ -102,6 +106,23 @@ class HomeActivity : AppCompatActivity() {
     private fun updateDeviceUI(deviceId: String, card: CardView?) {
         val isPaired = DeviceStateManager.isDevicePaired(deviceId)
         card?.alpha = if (isPaired) 1.0f else 0.5f
+    }
+
+    private fun setupRealTimeDate() {
+        val tvDate = findViewById<TextView>(R.id.tv_card_date)
+        val sdf = SimpleDateFormat("dd MMMM, yyyy", Locale.getDefault())
+        tvDate?.text = sdf.format(Date())
+    }
+
+    private fun setupDynamicWeather() {
+        val tvTemp = findViewById<TextView>(R.id.tv_home_temp)
+        val tvHumidity = findViewById<TextView>(R.id.tv_home_humidity)
+
+        val temp = Random.nextInt(20, 41)
+        val humidity = Random.nextInt(30, 81)
+
+        tvTemp?.text = "${temp}°"
+        tvHumidity?.text = "Humidity: ${humidity}%"
     }
 
     private fun setupDrawer() {
@@ -289,7 +310,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun performLogout() {
-        getSharedPreferences("user_session", MODE_PRIVATE).edit().clear().apply()
+        FirebaseAuth.getInstance().signOut()
         val intent = Intent(this, SignInActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)

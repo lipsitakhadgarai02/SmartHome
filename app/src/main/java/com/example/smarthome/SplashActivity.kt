@@ -6,6 +6,7 @@ import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import com.google.firebase.auth.FirebaseAuth
 
 class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,8 +17,19 @@ class SplashActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
 
         Handler(Looper.getMainLooper()).postDelayed({
-            startActivity(Intent(this, OnboardingActivity::class.java))
-            finish()
+            checkUserSession()
         }, 2000)
+    }
+
+    private fun checkUserSession() {
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        if (currentUser != null) {
+            // User is already logged in, go to Home
+            startActivity(Intent(this, HomeActivity::class.java))
+        } else {
+            // No user is logged in, show Onboarding
+            startActivity(Intent(this, OnboardingActivity::class.java))
+        }
+        finish()
     }
 }
