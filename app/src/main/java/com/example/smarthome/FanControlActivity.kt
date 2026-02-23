@@ -1,6 +1,8 @@
 package com.example.smarthome
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
@@ -13,34 +15,33 @@ class FanControlActivity : AppCompatActivity() {
 
     private var deviceId = "fan_unit_1"
     private var isPoweredOn = false
+    private val handler = Handler(Looper.getMainLooper())
+    private lateinit var updateRunnable: Runnable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_fan_control)
 
-        // Get device ID from intent if available
         intent.getStringExtra("DEVICE_ID")?.let { deviceId = it }
         
         setupUI()
+        setupRealTimeMetrics()
         handleBackNavigation()
     }
 
     private fun setupUI() {
         val btnBack = findViewById<ImageView>(R.id.btn_back)
-        val tvTitle = findViewById<TextView>(R.id.tv_fan_title)
         val ivFan = findViewById<ImageView>(R.id.iv_fan_image)
         val cvPower = findViewById<CardView>(R.id.cv_power_button)
         val ivPowerIcon = findViewById<ImageView>(R.id.iv_power_icon)
         val sliderSpeed = findViewById<Slider>(R.id.slider_fan_speed)
 
-        // Initialize state from Manager
         isPoweredOn = DeviceStateManager.getDeviceState(deviceId)
         val currentSpeed = DeviceStateManager.getDeviceValue(deviceId, 1)
 
         updatePowerUI(cvPower, ivPowerIcon, ivFan)
         sliderSpeed.value = currentSpeed.toFloat()
 
-        // Listeners
         btnBack.setOnClickListener { finish() }
 
         cvPower.setOnClickListener {
@@ -52,6 +53,25 @@ class FanControlActivity : AppCompatActivity() {
         sliderSpeed.addOnChangeListener { _, value, _ ->
             DeviceStateManager.setDeviceValue(deviceId, value.toInt())
         }
+    }
+
+    private fun setupRealTimeMetrics() {
+        val tvRpm = findViewById<TextView>(R.id.tv_fan_rpm)
+        val tvUsage = findViewById<TextView>(R.id.tv_fan_usage)
+
+        updateRunnable = object : Runnable {
+            override fun run() {
+                if (isPoweredOn) {
+                    tvRpm.text = "${DeviceStateManager.getSimulatedRPM(deviceId)} RPM"
+                    tvUsage.text = DeviceStateManager.getEnergyUsage(deviceId)
+                } else {
+                    tvRpm.text = "0 RPM"
+                    tvUsage.text = DeviceStateManager.getEnergyUsage(deviceId)
+                }
+                handler.postDelayed(this, 1000) // Update every second
+            }
+        }
+        handler.post(updateRunnable)
     }
 
     private fun updatePowerUI(cvPower: CardView, ivPowerIcon: ImageView, ivFan: ImageView) {
@@ -72,5 +92,10 @@ class FanControlActivity : AppCompatActivity() {
                 finish()
             }
         })
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacks(updateRunnable)
     }
 }

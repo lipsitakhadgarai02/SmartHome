@@ -1,130 +1,176 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:padding="24dp"
     android:background="@color/white">
 
     <TextView
+        android:id="@+id/tv_dialog_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Create New Room"
         android:textColor="@color/black"
         android:textSize="20sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/et_room_name"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/bg_search_outline"
-        android:hint="Room Name (e.g. Study Room)"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/bg_edittext"
+        android:hint="Room Name (e.g. Garage)"
+        android:inputType="textCapWords"
         android:paddingHorizontal="16dp"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@id/tv_dialog_title" />
 
     <TextView
+        android:id="@+id/tv_accessories_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="Add Accessories"
-        android:textColor="@color/black"
-        android:textSize="16sp"
-        android:textStyle="bold" />
+        android:text="Select Accessories"
+        android:textColor="@color/gray_text"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_room_name" />
 
-    <!-- AC Option -->
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nsv_accessories"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:layout_height="200dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/tv_accessories_label">
 
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_ac"
-            android:contentDescription="AC" />
-
-        <TextView
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_weight="1"
-            android:text="Air Conditioner"
-            android:textColor="@color/black" />
+            android:orientation="vertical">
 
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/switch_ac"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
+            <!-- AC Toggle -->
+            <RelativeLayout
+                android:id="@+id/rl_ac"
+                android:layout_width="match_parent"
+                android:layout_height="48dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="Air Conditioner"
+                    android:textColor="@color/black" />
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switch_ac"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    app:thumbTint="@color/white"
+                    app:trackTint="@color/primary_teal" />
+            </RelativeLayout>
 
-    <!-- Light Option -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+            <!-- Light Toggle -->
+            <RelativeLayout
+                android:id="@+id/rl_light"
+                android:layout_width="match_parent"
+                android:layout_height="48dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="Smart Light"
+                    android:textColor="@color/black" />
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switch_light"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    app:thumbTint="@color/white"
+                    app:trackTint="@color/primary_teal" />
+            </RelativeLayout>
 
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_bulb"
-            android:contentDescription="Light" />
+            <!-- Fan Toggle -->
+            <RelativeLayout
+                android:id="@+id/rl_fan"
+                android:layout_width="match_parent"
+                android:layout_height="48dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="Smart Fan"
+                    android:textColor="@color/black" />
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switch_fan"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    app:thumbTint="@color/white"
+                    app:trackTint="@color/primary_teal" />
+            </RelativeLayout>
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_weight="1"
-            android:text="Smart Light"
-            android:textColor="@color/black" />
+            <!-- TV Toggle -->
+            <RelativeLayout
+                android:id="@+id/rl_tv"
+                android:layout_width="match_parent"
+                android:layout_height="48dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="Smart TV"
+                    android:textColor="@color/black" />
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switch_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    app:thumbTint="@color/white"
+                    app:trackTint="@color/primary_teal" />
+            </RelativeLayout>
 
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/switch_light"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
+            <!-- Speaker Toggle -->
+            <RelativeLayout
+                android:id="@+id/rl_speaker"
+                android:layout_width="match_parent"
+                android:layout_height="48dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="Smart Speaker"
+                    android:textColor="@color/black" />
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switch_speaker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    app:thumbTint="@color/white"
+                    app:trackTint="@color/primary_teal" />
+            </RelativeLayout>
 
-    <!-- Fan Option -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_launcher_foreground"
-            android:contentDescription="Fan"
-            android:tint="@color/primary_teal" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_weight="1"
-            android:text="Smart Fan"
-            android:textColor="@color/black" />
-
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/switch_fan"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_create"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="32dp"
-        android:backgroundTint="@color/primary_teal"
+        android:layout_height="56dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_pill_button"
         android:text="Create Room"
-        android:textColor="@color/white" />
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/nsv_accessories" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

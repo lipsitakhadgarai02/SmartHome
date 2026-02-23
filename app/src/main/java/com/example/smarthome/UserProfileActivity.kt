@@ -126,6 +126,11 @@ class UserProfileActivity : AppCompatActivity() {
             setPadding(padding, padding, padding, padding)
         }
 
+        val etOldPassword = EditText(context).apply {
+            hint = "Current Password"
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+        }
+
         val etNewPassword = EditText(context).apply {
             hint = "New Password"
             inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
@@ -136,6 +141,7 @@ class UserProfileActivity : AppCompatActivity() {
             inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
         }
 
+        layout.addView(etOldPassword)
         layout.addView(etNewPassword)
         layout.addView(etConfirmPassword)
 
@@ -143,15 +149,16 @@ class UserProfileActivity : AppCompatActivity() {
             .setTitle("Change Password")
             .setView(layout)
             .setPositiveButton("Update") { _, _ ->
+                val oldPass = etOldPassword.text.toString()
                 val newPass = etNewPassword.text.toString()
                 val confirmPass = etConfirmPassword.text.toString()
 
                 when {
-                    newPass.isEmpty() || confirmPass.isEmpty() -> {
-                        Toast.makeText(context, "Password fields cannot be empty", Toast.LENGTH_SHORT).show()
+                    oldPass.isEmpty() || newPass.isEmpty() || confirmPass.isEmpty() -> {
+                        Toast.makeText(context, "All fields are required", Toast.LENGTH_SHORT).show()
                     }
                     newPass != confirmPass -> {
-                        Toast.makeText(context, "Passwords do not match", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "New passwords do not match", Toast.LENGTH_SHORT).show()
                     }
                     else -> {
                         Toast.makeText(context, "Password updated successfully (Demo)", Toast.LENGTH_LONG).show()
