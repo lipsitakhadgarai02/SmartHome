@@ -17,12 +17,13 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import kotlin.random.Random
 
 class HomeActivity : AppCompatActivity() {
 
@@ -38,7 +39,7 @@ class HomeActivity : AppCompatActivity() {
         setupClickListeners()
         handleBackNavigation()
         setupRealTimeDate()
-        setupDynamicWeather()
+        fetchRealWeather()
         updateUserInfo()
         
         // Fix for 3-button navigation spacing and icon clipping
@@ -114,15 +115,24 @@ class HomeActivity : AppCompatActivity() {
         tvDate?.text = sdf.format(Date())
     }
 
-    private fun setupDynamicWeather() {
+    private fun fetchRealWeather() {
         val tvTemp = findViewById<TextView>(R.id.tv_home_temp)
         val tvHumidity = findViewById<TextView>(R.id.tv_home_humidity)
 
-        val temp = Random.nextInt(20, 41)
-        val humidity = Random.nextInt(30, 81)
-
-        tvTemp?.text = "${temp}°"
-        tvHumidity?.text = "Humidity: ${humidity}%"
+        lifecycleScope.launch {
+            try {
+                val response = RetrofitInstance.api.getWeather("Bhubaneswar", BuildConfig.WEATHER_API_KEY)
+                if (response.isSuccessful && response.body() != null) {
+                    val weather = response.body()!!
+                    tvTemp?.text = "${weather.main.temp.toInt()}°"
+                    tvHumidity?.text = "Humidity: ${weather.main.humidity}%"
+                }
+            } catch (e: Exception) {
+                // Fallback to offline values if API fails
+                tvTemp?.text = "28°"
+                tvHumidity?.text = "Humidity: 45%"
+            }
+        }
     }
 
     private fun setupDrawer() {
