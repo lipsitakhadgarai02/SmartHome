@@ -19,6 +19,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_arrow_back"
+            android:contentDescription="@string/back"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -47,6 +48,7 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@drawable/ic_search"
+                    android:contentDescription="Search"
                     app:tint="@color/primary_teal" />
 
                 <EditText
@@ -122,51 +124,7 @@
                         android:layout_height="60dp"
                         android:layout_marginEnd="24dp"
                         android:src="@drawable/ic_wifi"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:tint="@color/white" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.cardview.widget.CardView>
-
-            <!-- Bluetooth Scan Card -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cv_scan_bluetooth"
-                android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:layout_marginHorizontal="24dp"
-                android:layout_marginTop="16dp"
-                app:cardCornerRadius="24dp"
-                app:cardElevation="0dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="#1976D2">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="24dp"
-                        android:text="Scan Buds and\nBluetooth Devices"
-                        android:textColor="@color/white"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@id/iv_bt_icon"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <ImageView
-                        android:id="@+id/iv_bt_icon"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:layout_marginEnd="24dp"
-                        android:src="@drawable/ic_play"
+                        android:contentDescription="Wi-Fi"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -197,12 +155,15 @@
 
                 <!-- Air Conditioner -->
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/cv_cat_ac"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
                     android:layout_margin="8dp"
                     app:cardCornerRadius="20dp"
-                    app:cardElevation="0dp">
+                    app:cardElevation="0dp"
+                    android:clickable="true"
+                    android:focusable="true">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -230,12 +191,15 @@
 
                 <!-- Smart Bulb -->
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/cv_cat_bulb"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
                     android:layout_margin="8dp"
                     app:cardCornerRadius="20dp"
-                    app:cardElevation="0dp">
+                    app:cardElevation="0dp"
+                    android:clickable="true"
+                    android:focusable="true">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -263,12 +227,15 @@
 
                 <!-- Smart TV -->
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/cv_cat_tv"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
                     android:layout_margin="8dp"
                     app:cardCornerRadius="20dp"
-                    app:cardElevation="0dp">
+                    app:cardElevation="0dp"
+                    android:clickable="true"
+                    android:focusable="true">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -296,12 +263,15 @@
 
                 <!-- Smart Fan -->
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/cv_cat_fan"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
                     android:layout_margin="8dp"
                     app:cardCornerRadius="20dp"
-                    app:cardElevation="0dp">
+                    app:cardElevation="0dp"
+                    android:clickable="true"
+                    android:focusable="true">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -314,7 +284,7 @@
                         <ImageView
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:src="@drawable/ic_launcher_foreground"
+                            android:src="@drawable/ic_fan"
                             app:tint="@color/primary_teal" />
 
                         <TextView
@@ -329,12 +299,15 @@
 
                 <!-- Smart Speaker -->
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/cv_cat_speaker"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
                     android:layout_margin="8dp"
                     app:cardCornerRadius="20dp"
-                    app:cardElevation="0dp">
+                    app:cardElevation="0dp"
+                    android:clickable="true"
+                    android:focusable="true">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -362,12 +335,15 @@
 
                 <!-- Smart Lamp -->
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/cv_cat_lamp"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
                     android:layout_margin="8dp"
                     app:cardCornerRadius="20dp"
-                    app:cardElevation="0dp">
+                    app:cardElevation="0dp"
+                    android:clickable="true"
+                    android:focusable="true">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -395,12 +371,15 @@
 
                 <!-- Washing Machine -->
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/cv_cat_washing_machine"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
                     android:layout_margin="8dp"
                     app:cardCornerRadius="20dp"
-                    app:cardElevation="0dp">
+                    app:cardElevation="0dp"
+                    android:clickable="true"
+                    android:focusable="true">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -428,12 +407,15 @@
 
                 <!-- Wi-Fi -->
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/cv_cat_wifi"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
                     android:layout_margin="8dp"
                     app:cardCornerRadius="20dp"
-                    app:cardElevation="0dp">
+                    app:cardElevation="0dp"
+                    android:clickable="true"
+                    android:focusable="true">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -461,12 +443,15 @@
 
                 <!-- DVD Player -->
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/cv_cat_dvd"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
                     android:layout_margin="8dp"
                     app:cardCornerRadius="20dp"
-                    app:cardElevation="0dp">
+                    app:cardElevation="0dp"
+                    android:clickable="true"
+                    android:focusable="true">
 
                     <LinearLayout
                         android:layout_width="match_parent"

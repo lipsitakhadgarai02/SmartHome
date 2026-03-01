@@ -15,7 +15,6 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
         buildConfigField("String", "WEATHER_API_KEY", "\"d0930b062d222adf547582b8c17c9f16\"")
     }
 
@@ -40,21 +39,23 @@ android {
 }
 
 dependencies {
-
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:34.9.0"))
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-database")
     implementation("com.google.android.gms:play-services-auth:21.0.0")
 
-    // Swipe Refresh
-    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+    // QR & Camera
+    implementation("com.google.mlkit:barcode-scanning:17.1.0")
+    implementation("androidx.camera:camera-camera2:1.5.3")
+    implementation("androidx.camera:camera-lifecycle:1.5.3")
+    implementation("androidx.camera:camera-view:1.5.3")
 
-    // Retrofit (🔥 WEATHER API)
+    // Swipe Refresh & Networking
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-
-    // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
     implementation(libs.androidx.core.ktx)

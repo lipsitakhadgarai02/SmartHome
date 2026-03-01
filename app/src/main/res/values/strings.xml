@@ -1,4 +1,15 @@
 <resources>
     <string name="app_name">Smart Home</string>
     <string name="default_web_client_id">670867161643-oouckbuk4bt4c0mjjuh84a7gisaev5f5.apps.googleusercontent.com</string>
+
+    <!-- TV Connection Method -->
+    <string name="connection_method">Connection Method</string>
+    <string name="tv_connection_desc">Choose how you want to connect your Smart TV</string>
+    <string name="scan_qr_code">Scan QR Code</string>
+    <string name="scan_qr_desc">Scan the QR code shown on TV screen</string>
+    <string name="enter_pin_code">Enter PIN Code</string>
+    <string name="enter_pin_desc">Enter the 6-digit PIN shown on TV</string>
+    <string name="wifi_discovery">Wi-Fi Discovery</string>
+    <string name="wifi_discovery_desc">Search for TV on your Wi-Fi network</string>
+    <string name="back">Back</string>
 </resources>

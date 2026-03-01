@@ -10,25 +10,24 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 
 /**
- * TvRemoteActivity provides a digital remote interface for Smart TV control.
+ * TvRemoteActivity provides a digital remote interface for Smart TV control via Wi-Fi.
  */
 class TvRemoteActivity : AppCompatActivity() {
 
     private var isDeviceOn: Boolean = false
-    private var volume: Int = 25 // Default volume
-    private val deviceId = "TV_UNIT_1"
+    private var volume: Int = 25
+    private var deviceId = "tv_living_room" // Unified device ID from Discovery
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tv_remote)
 
-        // Restore state from manager
+        // Restore state from manager or Firebase
         isDeviceOn = DeviceStateManager.getDeviceState(deviceId)
         volume = DeviceStateManager.getDeviceValue(deviceId, 25)
 
         setupUI()
         
-        // Handle modern back press logic
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 finish()
@@ -37,12 +36,14 @@ class TvRemoteActivity : AppCompatActivity() {
     }
 
     private fun setupUI() {
-        // Back Button
+        // Status Header
+        val tvStatus = findViewById<TextView>(R.id.tv_room_name)
+        tvStatus?.text = "Living Room TV (Wi-Fi)"
+        
         findViewById<ImageView>(R.id.iv_back_remote)?.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
 
-        // Power Toggle Logic
         val powerButton = findViewById<ImageButton>(R.id.iv_power)
         powerButton?.setOnClickListener {
             isDeviceOn = !isDeviceOn
@@ -50,11 +51,9 @@ class TvRemoteActivity : AppCompatActivity() {
             
             val message = if (isDeviceOn) "TV Turned ON" else "TV Turned OFF"
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-            
             updateVisualState(powerButton)
         }
 
-        // Volume Controls
         val tvVolLevel = findViewById<TextView>(R.id.tv_volume_level)
         val ivVolUp = findViewById<ImageView>(R.id.iv_vol_up)
         val ivVolDown = findViewById<ImageView>(R.id.iv_vol_down)
@@ -65,7 +64,6 @@ class TvRemoteActivity : AppCompatActivity() {
             if (isDeviceOn) {
                 if (volume < 100) {
                     volume += 1
-                    if (volume > 100) volume = 100
                     updateVolumeUI(tvVolLevel)
                 }
             } else {
@@ -77,7 +75,6 @@ class TvRemoteActivity : AppCompatActivity() {
             if (isDeviceOn) {
                 if (volume > 0) {
                     volume -= 1
-                    if (volume < 0) volume = 0
                     updateVolumeUI(tvVolLevel)
                 }
             } else {
@@ -85,10 +82,7 @@ class TvRemoteActivity : AppCompatActivity() {
             }
         }
 
-        // D-Pad and other buttons (Feedback Only)
         setupFeedbackButtons()
-        
-        // Initial visual state
         updateVisualState(powerButton)
     }
 
@@ -111,7 +105,7 @@ class TvRemoteActivity : AppCompatActivity() {
             findViewById<View>(id)?.setOnClickListener {
                 if (isDeviceOn) {
                     val name = resources.getResourceEntryName(id).replace("btn_", "").replace("_", " ").capitalize()
-                    Toast.makeText(this, "$name pressed", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "$name pressed (via Wi-Fi)", Toast.LENGTH_SHORT).show()
                 } else {
                     showPowerOffToast()
                 }
@@ -122,18 +116,15 @@ class TvRemoteActivity : AppCompatActivity() {
     private fun updateVisualState(powerButton: ImageButton?) {
         val dpadContainer = findViewById<View>(R.id.dpad_container)
         val volumeContainer = findViewById<View>(R.id.ll_volume_container)
-        val volText = findViewById<View>(R.id.tv_volume_level)
         
         if (isDeviceOn) {
             powerButton?.setColorFilter(resources.getColor(R.color.accent_green, theme))
             dpadContainer?.alpha = 1.0f
             volumeContainer?.alpha = 1.0f
-            volText?.alpha = 1.0f
         } else {
             powerButton?.setColorFilter(resources.getColor(R.color.primary_teal, theme))
             dpadContainer?.alpha = 0.4f
             volumeContainer?.alpha = 0.4f
-            volText?.alpha = 0.4f
         }
     }
 }

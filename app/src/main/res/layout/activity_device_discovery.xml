@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/bg_light"
     tools:context=".DeviceDiscoveryActivity">
 
     <!-- Header -->
@@ -16,6 +16,7 @@
         android:layout_marginTop="16dp"
         android:padding="8dp"
         android:src="@drawable/ic_arrow_back"
+        android:contentDescription="@string/back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:tint="@color/primary_teal" />
@@ -24,52 +25,59 @@
         android:id="@+id/tv_discovery_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Discovery Mode"
+        android:text="Wi-Fi TV Discovery"
         android:textColor="@color/black"
         android:textSize="18sp"
-        android:fontFamily="sans-serif-medium"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/btn_back_discovery"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/btn_back_discovery" />
 
-    <ImageView
-        android:id="@+id/iv_refresh_manual"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="16dp"
-        android:padding="8dp"
-        android:src="@drawable/ic_lightning"
-        app:layout_constraintBottom_toBottomOf="@id/tv_discovery_title"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tv_discovery_title"
-        app:tint="@color/primary_teal"
-        android:clickable="true"
-        android:focusable="true"
-        android:background="?attr/selectableItemBackgroundBorderless" />
+    <!-- Scanner Illustration Area -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/scanner_area"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/tv_discovery_title">
 
-    <!-- Scanner Illustration -->
-    <ImageView
-        android:id="@+id/iv_discovery_scanner"
-        android:layout_width="200dp"
-        android:layout_height="150dp"
-        android:layout_marginTop="24dp"
-        android:src="@drawable/ic_scanning_device"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_back_discovery" />
+        <ImageView
+            android:id="@+id/iv_discovery_scanner"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/ic_wifi"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/primary_teal" />
+
+        <ProgressBar
+            android:id="@+id/pb_scanning"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/primary_teal"
+            style="?android:attr/progressBarStyleLarge"
+            app:layout_constraintBottom_toBottomOf="@id/iv_discovery_scanner"
+            app:layout_constraintEnd_toEndOf="@id/iv_discovery_scanner"
+            app:layout_constraintStart_toStartOf="@id/iv_discovery_scanner"
+            app:layout_constraintTop_toTopOf="@id/iv_discovery_scanner" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/iv_discovery_scanner">
+        app:layout_constraintTop_toBottomOf="@id/scanner_area">
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:fillViewport="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -77,9 +85,8 @@
                 android:orientation="vertical"
                 android:paddingBottom="48dp">
 
-                <!-- Dropdown-style Container -->
                 <androidx.cardview.widget.CardView
-                    android:id="@+id/cv_dropdown_header"
+                    android:id="@+id/cv_results"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="24dp"
@@ -90,8 +97,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="4dp">
+                        android:orientation="vertical">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -99,23 +105,22 @@
                             android:gravity="center_vertical"
                             android:orientation="horizontal"
                             android:paddingHorizontal="16dp"
-                            android:background="#F5F5F5">
+                            android:background="#F8F9F9">
 
                             <TextView
                                 android:id="@+id/tv_category_label"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Found Devices"
+                                android:text="Searching network..."
                                 android:textColor="@color/black"
                                 android:textStyle="bold" />
 
-                            <ImageView
+                            <ProgressBar
+                                android:id="@+id/pb_small"
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"
-                                android:src="@drawable/ic_arrow_back"
-                                android:rotation="-90"
-                                app:tint="@color/gray_text" />
+                                android:indeterminateTint="@color/primary_teal" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -129,12 +134,11 @@
                 </androidx.cardview.widget.CardView>
 
                 <TextView
-                    android:id="@+id/tv_refresh_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="16dp"
-                    android:text="Swipe down to refresh manually"
+                    android:layout_marginTop="24dp"
+                    android:text="Swipe down to rescan"
                     android:textColor="@color/gray_text"
                     android:textSize="12sp" />
 
