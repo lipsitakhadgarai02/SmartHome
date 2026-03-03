@@ -16,11 +16,16 @@ class TvRemoteActivity : AppCompatActivity() {
 
     private var isDeviceOn: Boolean = false
     private var volume: Int = 25
-    private var deviceId = "tv_living_room" // Unified device ID from Discovery
+    private lateinit var deviceId: String
+    private lateinit var deviceName: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tv_remote)
+
+        // Get data from Intent
+        deviceId = intent.getStringExtra("DEVICE_ID") ?: "tv_living_room"
+        deviceName = intent.getStringExtra("DEVICE_NAME") ?: "Smart TV"
 
         // Restore state from manager or Firebase
         isDeviceOn = DeviceStateManager.getDeviceState(deviceId)
@@ -38,7 +43,7 @@ class TvRemoteActivity : AppCompatActivity() {
     private fun setupUI() {
         // Status Header
         val tvStatus = findViewById<TextView>(R.id.tv_room_name)
-        tvStatus?.text = "Living Room TV (Wi-Fi)"
+        tvStatus?.text = "$deviceName (Wi-Fi)"
         
         findViewById<ImageView>(R.id.iv_back_remote)?.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
@@ -49,7 +54,7 @@ class TvRemoteActivity : AppCompatActivity() {
             isDeviceOn = !isDeviceOn
             DeviceStateManager.setDeviceState(deviceId, isDeviceOn)
             
-            val message = if (isDeviceOn) "TV Turned ON" else "TV Turned OFF"
+            val message = if (isDeviceOn) "$deviceName Turned ON" else "$deviceName Turned OFF"
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
             updateVisualState(powerButton)
         }
@@ -92,7 +97,7 @@ class TvRemoteActivity : AppCompatActivity() {
     }
 
     private fun showPowerOffToast() {
-        Toast.makeText(this, "Turn ON the TV first", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "Turn ON the $deviceName first", Toast.LENGTH_SHORT).show()
     }
 
     private fun setupFeedbackButtons() {
@@ -104,7 +109,11 @@ class TvRemoteActivity : AppCompatActivity() {
         buttons.forEach { id ->
             findViewById<View>(id)?.setOnClickListener {
                 if (isDeviceOn) {
-                    val name = resources.getResourceEntryName(id).replace("btn_", "").replace("_", " ").capitalize()
+                    val name = try {
+                        resources.getResourceEntryName(id).replace("btn_", "").replace("_", " ").replaceFirstChar { it.uppercase() }
+                    } catch (e: Exception) {
+                        "Button"
+                    }
                     Toast.makeText(this, "$name pressed (via Wi-Fi)", Toast.LENGTH_SHORT).show()
                 } else {
                     showPowerOffToast()

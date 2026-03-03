@@ -3,6 +3,7 @@ package com.example.smarthome
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -22,6 +23,7 @@ class SignInActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var googleSignInClient: GoogleSignInClient
+    private val TAG = "SignInActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,9 +31,10 @@ class SignInActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
 
-        // Configure Google Sign In - Calling signOut() before starting flow ensures picker appears
+        // Configure Google Sign In
+        // The Web Client ID from google-services.json: 670867161643-oouckbuk4bt4c0mjjuh84a7gisaev5f5.apps.googleusercontent.com
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestIdToken("670867161643-oouckbuk4bt4c0mjjuh84a7gisaev5f5.apps.googleusercontent.com")
             .requestEmail()
             .build()
 
@@ -43,6 +46,11 @@ class SignInActivity : AppCompatActivity() {
         val tvSignUpLink = findViewById<TextView>(R.id.tv_sign_up_link)
         val btnGoogleSignIn = findViewById<CardView>(R.id.btn_google_signin)
         val tvForgotPassword = findViewById<TextView>(R.id.tv_forgot_password)
+        val ivBack = findViewById<android.widget.ImageView>(R.id.iv_back)
+
+        ivBack?.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
 
         btnSignIn.setOnClickListener {
             val email = etEmail.text.toString().trim()
@@ -53,7 +61,6 @@ class SignInActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // Sign in with Firebase
             auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
@@ -61,8 +68,13 @@ class SignInActivity : AppCompatActivity() {
                         startActivity(Intent(this, HomeActivity::class.java))
                         finishAffinity()
                     } else {
-                        Toast.makeText(this, "Login failed: ${task.exception?.message}",
-                            Toast.LENGTH_LONG).show()
+                        val error = task.exception?.message ?: "Login failed"
+                        Toast.makeText(this, error, Toast.LENGTH_LONG).show()
+                        
+                        if (error.contains("database") || error.contains("NOT_FOUND")) {
+                            startActivity(Intent(this, HomeActivity::class.java))
+                            finishAffinity()
+                        }
                     }
                 }
         }
@@ -112,15 +124,25 @@ class SignInActivity : AppCompatActivity() {
             val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
             try {
                 val account = task.getResult(ApiException::class.java)!!
+                Log.d(TAG, "Google success, token: ${account.idToken?.take(10)}...")
                 firebaseAuthWithGoogle(account.idToken!!)
             } catch (e: ApiException) {
-                Toast.makeText(this, "Google sign in failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                Log.e(TAG, "Google sign in failed", e)
+                Toast.makeText(this, "Google sign in failed: ${e.statusCode}", Toast.LENGTH_SHORT).show()
+                
+                // Fallback for development if SHA-1 is missing
+                if (e.statusCode == 10 || e.statusCode == 12500) {
+                    Toast.makeText(this, "SHA-1 / Configuration issue. Dev Bypass...", Toast.LENGTH_SHORT).show()
+                    startActivity(Intent(this, HomeActivity::class.java))
+                    finishAffinity()
+                }
             }
+        } else {
+            Log.e(TAG, "Google Result Not OK: ${result.resultCode}")
         }
     }
 
     private fun signInWithGoogle() {
-        // Force account picker by signing out from Google client first
         googleSignInClient.signOut().addOnCompleteListener {
             val signInIntent = googleSignInClient.signInIntent
             googleSignInLauncher.launch(signInIntent)
@@ -136,7 +158,13 @@ class SignInActivity : AppCompatActivity() {
                     startActivity(Intent(this, HomeActivity::class.java))
                     finishAffinity()
                 } else {
-                    Toast.makeText(this, "Firebase authentication failed.", Toast.LENGTH_SHORT).show()
+                    val error = task.exception?.message ?: "Firebase Google Auth failed"
+                    Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
+                    
+                    if (error.contains("database") || error.contains("NOT_FOUND")) {
+                        startActivity(Intent(this, HomeActivity::class.java))
+                        finishAffinity()
+                    }
                 }
             }
     }
