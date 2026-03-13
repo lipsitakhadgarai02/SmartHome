@@ -10,7 +10,8 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 
 /**
- * TvRemoteActivity provides a digital remote interface for Smart TV control via Wi-Fi.
+ * TvRemoteActivity provides a digital remote interface for Smart TV control.
+ * Integrated with Persistent TCP Sockets for real-time Laptop control.
  */
 class TvRemoteActivity : AppCompatActivity() {
 
@@ -18,6 +19,8 @@ class TvRemoteActivity : AppCompatActivity() {
     private var volume: Int = 25
     private lateinit var deviceId: String
     private lateinit var deviceName: String
+    private lateinit var deviceIp: String
+    private var socketHandler: SocketHandler? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,9 +28,15 @@ class TvRemoteActivity : AppCompatActivity() {
 
         // Get data from Intent
         deviceId = intent.getStringExtra("DEVICE_ID") ?: "tv_living_room"
-        deviceName = intent.getStringExtra("DEVICE_NAME") ?: "Smart TV"
+        deviceName = intent.getStringExtra("DEVICE_NAME") ?: "Laptop"
+        deviceIp = intent.getStringExtra("DEVICE_IP") ?: ""
+        val connectionMode = intent.getStringExtra("CONNECTION_MODE") ?: ""
 
-        // Restore state from manager or Firebase
+        if (connectionMode == "SOCKET" && deviceIp.isNotEmpty()) {
+            setupSocketConnection()
+        }
+
+        // Restore state
         isDeviceOn = DeviceStateManager.getDeviceState(deviceId)
         volume = DeviceStateManager.getDeviceValue(deviceId, 25)
 
@@ -40,10 +49,17 @@ class TvRemoteActivity : AppCompatActivity() {
         })
     }
 
+    private fun setupSocketConnection() {
+        socketHandler = SocketHandler { response ->
+            // Handle JSON response from Laptop
+            Toast.makeText(this, "Response: $response", Toast.LENGTH_SHORT).show()
+        }
+        socketHandler?.connect(deviceIp)
+    }
+
     private fun setupUI() {
-        // Status Header
         val tvStatus = findViewById<TextView>(R.id.tv_room_name)
-        tvStatus?.text = "$deviceName (Wi-Fi)"
+        tvStatus?.text = if (deviceIp.isNotEmpty()) "$deviceName ($deviceIp)" else deviceName
         
         findViewById<ImageView>(R.id.iv_back_remote)?.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
@@ -54,7 +70,13 @@ class TvRemoteActivity : AppCompatActivity() {
             isDeviceOn = !isDeviceOn
             DeviceStateManager.setDeviceState(deviceId, isDeviceOn)
             
-            val message = if (isDeviceOn) "$deviceName Turned ON" else "$deviceName Turned OFF"
+            if (isDeviceOn) {
+                socketHandler?.sendCommand("WAKE") // Example
+            } else {
+                socketHandler?.sendCommand("SHUTDOWN")
+            }
+            
+            val message = if (isDeviceOn) "$deviceName Active" else "$deviceName Shutdown Sent"
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
             updateVisualState(powerButton)
         }
@@ -67,6 +89,7 @@ class TvRemoteActivity : AppCompatActivity() {
 
         ivVolUp?.setOnClickListener {
             if (isDeviceOn) {
+                socketHandler?.sendCommand("VOLUME_UP")
                 if (volume < 100) {
                     volume += 1
                     updateVolumeUI(tvVolLevel)
@@ -78,6 +101,7 @@ class TvRemoteActivity : AppCompatActivity() {
 
         ivVolDown?.setOnClickListener {
             if (isDeviceOn) {
+                socketHandler?.sendCommand("VOLUME_DOWN")
                 if (volume > 0) {
                     volume -= 1
                     updateVolumeUI(tvVolLevel)
@@ -101,20 +125,16 @@ class TvRemoteActivity : AppCompatActivity() {
     }
 
     private fun setupFeedbackButtons() {
-        val buttons = listOf(
-            R.id.btn_ok, R.id.btn_up, R.id.btn_down, R.id.btn_left, R.id.btn_right,
-            R.id.btn_remote_back, R.id.btn_remote_tv, R.id.btn_remote_play, R.id.btn_remote_mute
+        val buttons = mapOf(
+            R.id.btn_ok to "LOCK_SCREEN",
+            R.id.btn_remote_play to "PLAY_PAUSE",
+            R.id.btn_remote_mute to "MUTE"
         )
 
-        buttons.forEach { id ->
+        buttons.forEach { (id, command) ->
             findViewById<View>(id)?.setOnClickListener {
                 if (isDeviceOn) {
-                    val name = try {
-                        resources.getResourceEntryName(id).replace("btn_", "").replace("_", " ").replaceFirstChar { it.uppercase() }
-                    } catch (e: Exception) {
-                        "Button"
-                    }
-                    Toast.makeText(this, "$name pressed (via Wi-Fi)", Toast.LENGTH_SHORT).show()
+                    socketHandler?.sendCommand(command)
                 } else {
                     showPowerOffToast()
                 }
@@ -135,5 +155,10 @@ class TvRemoteActivity : AppCompatActivity() {
             dpadContainer?.alpha = 0.4f
             volumeContainer?.alpha = 0.4f
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        socketHandler?.closeConnection()
     }
 }
