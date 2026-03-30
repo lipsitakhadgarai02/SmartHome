@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
         android:allowBackup="true"
@@ -109,12 +110,16 @@
             android:name=".UserProfileActivity"
             android:exported="false" />
 
-        <activity
+            <activity
             android:name=".AccountManagementActivity"
             android:exported="false" />
 
         <activity
             android:name=".SpeakerControlActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".UsageDashboardActivity"
             android:exported="false" />
 
 

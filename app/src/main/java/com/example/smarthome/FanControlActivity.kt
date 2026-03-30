@@ -63,10 +63,10 @@ class FanControlActivity : AppCompatActivity() {
             override fun run() {
                 if (isPoweredOn) {
                     tvRpm.text = "${DeviceStateManager.getSimulatedRPM(deviceId)} RPM"
-                    tvUsage.text = DeviceStateManager.getEnergyUsage(deviceId)
+                    tvUsage.text = DeviceStateManager.getEnergyUsageFormatted(deviceId)
                 } else {
                     tvRpm.text = "0 RPM"
-                    tvUsage.text = DeviceStateManager.getEnergyUsage(deviceId)
+                    tvUsage.text = DeviceStateManager.getEnergyUsageFormatted(deviceId)
                 }
                 handler.postDelayed(this, 1000) // Update every second
             }

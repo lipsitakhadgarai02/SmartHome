@@ -24,6 +24,11 @@ class DeviceScanActivity : AppCompatActivity() {
     }
 
     private fun setupScanningActions() {
+        // Usage Dashboard Navigation
+        findViewById<CardView>(R.id.cv_usage_dashboard)?.setOnClickListener {
+            startActivity(Intent(this, UsageDashboardActivity::class.java))
+        }
+
         // Main Scan Card
         findViewById<CardView>(R.id.cv_scan_nearby)?.setOnClickListener {
             startActivity(Intent(this, TvConnectionMethodActivity::class.java))

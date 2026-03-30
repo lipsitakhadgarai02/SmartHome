@@ -23,7 +23,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Living Room"
+        android:text="Air Conditioner"
         android:textColor="@color/primary_teal"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -32,25 +32,101 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/iv_back_ac" />
 
+    <!-- Usage Dashboard Card -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_usage_dashboard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="24dp"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="4dp"
+        app:layout_constraintTop_toBottomOf="@+id/iv_back_ac">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#004D40"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Usage Dashboard"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Energy"
+                        android:textColor="#B2DFDB"
+                        android:textSize="10sp" />
+                    <TextView
+                        android:id="@+id/tv_usage_kwh"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0.000 kWh"
+                        android:textColor="@color/white"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Time Active"
+                        android:textColor="#B2DFDB"
+                        android:textSize="10sp" />
+                    <TextView
+                        android:id="@+id/tv_usage_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0h 0m"
+                        android:textColor="@color/white"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
     <!-- AC Info Section -->
     <TextView
         android:id="@+id/tv_ac_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="40dp"
-        android:text="AC"
+        android:layout_marginTop="32dp"
+        android:text="AC Control"
         android:textColor="@color/black"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv_back_ac" />
+        app:layout_constraintTop_toBottomOf="@+id/cv_usage_dashboard" />
 
     <TextView
         android:id="@+id/tv_ac_room"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Bed Room"
+        android:text="Living Room"
         android:textColor="@color/gray_text"
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="@+id/tv_ac_title"
@@ -83,8 +159,8 @@
 
     <!-- AC Illustration Card -->
     <androidx.cardview.widget.CardView
-        android:layout_width="160dp"
-        android:layout_height="160dp"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
         android:layout_marginEnd="24dp"
         app:cardCornerRadius="24dp"
         app:cardElevation="0dp"
@@ -110,7 +186,7 @@
         android:id="@+id/ll_modes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="40dp"
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@+id/ll_ac_switch">
@@ -141,7 +217,7 @@
         android:id="@+id/fl_temp_control"
         android:layout_width="220dp"
         android:layout_height="220dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ll_modes">

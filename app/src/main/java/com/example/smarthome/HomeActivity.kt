@@ -1,7 +1,14 @@
 package com.example.smarthome
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.speech.RecognitionListener
+import android.speech.RecognizerIntent
+import android.speech.SpeechRecognizer
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
@@ -12,28 +19,37 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import java.util.*
 
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var drawerLayout: DrawerLayout
+    private lateinit var speechRecognizer: SpeechRecognizer
+    private val handler = Handler(Looper.getMainLooper())
+    private val dashboardUpdateRunnable = object : Runnable {
+        override fun run() {
+            updateDashboard()
+            handler.postDelayed(this, 2000)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        // Initialize UI and Navigation
         setupDrawer()
         setupBottomNavigation()
         setupClickListeners()
@@ -41,9 +57,10 @@ class HomeActivity : AppCompatActivity() {
         setupRealTimeDate()
         fetchRealWeather()
         updateUserInfo()
-        
-        // Fix for 3-button navigation spacing and icon clipping
         applyWindowInsets()
+        initVoiceAssistant()
+        
+        handler.post(dashboardUpdateRunnable)
     }
 
     override fun onResume() {
@@ -53,6 +70,115 @@ class HomeActivity : AppCompatActivity() {
         updateUserInfo()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacks(dashboardUpdateRunnable)
+        speechRecognizer.destroy()
+    }
+
+    private fun updateDashboard() {
+        val tvPower = findViewById<TextView>(R.id.tv_power_kw)
+        val tvAmps = findViewById<TextView>(R.id.tv_current_amps)
+        val tvStatus = findViewById<TextView>(R.id.tv_status_indicator)
+        val tvTime = findViewById<TextView>(R.id.tv_active_time)
+
+        val power = DeviceStateManager.getTotalLiveLoad()
+        val amps = DeviceStateManager.getCurrentInAmps()
+        val status = DeviceStateManager.getUsageStatus()
+        val minutes = DeviceStateManager.getTotalActiveTimeMinutes()
+
+        tvPower?.text = String.format("%.2f kW", power)
+        tvAmps?.text = String.format("%.2f A", amps)
+        tvStatus?.text = status
+        
+        val h = minutes / 60
+        val m = minutes % 60
+        tvTime?.text = "${h}h ${m}m"
+
+        // Update status color
+        when (status) {
+            "Good", "Ideal" -> tvStatus?.setBackgroundResource(R.drawable.bg_rounded_teal)
+            "Moderate" -> tvStatus?.setBackgroundColor(ContextCompat.getColor(this, android.R.color.holo_orange_light))
+            "High" -> tvStatus?.setBackgroundColor(ContextCompat.getColor(this, android.R.color.holo_red_light))
+        }
+    }
+
+    private fun initVoiceAssistant() {
+        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this)
+        val speechIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
+            putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+            putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
+        }
+
+        speechRecognizer.setRecognitionListener(object : RecognitionListener {
+            override fun onReadyForSpeech(params: Bundle?) {
+                Toast.makeText(this@HomeActivity, "Listening...", Toast.LENGTH_SHORT).show()
+            }
+            override fun onResults(results: Bundle?) {
+                val matches = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+                if (!matches.isNullOrEmpty()) {
+                    processVoiceCommand(matches[0].lowercase())
+                }
+            }
+            override fun onBeginningOfSpeech() {}
+            override fun onRmsChanged(rmsdB: Float) {}
+            override fun onBufferReceived(buffer: ByteArray?) {}
+            override fun onEndOfSpeech() {}
+            override fun onError(error: Int) {
+                val message = when (error) {
+                    SpeechRecognizer.ERROR_AUDIO -> "Audio recording error"
+                    SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> "Insufficient permissions"
+                    else -> "Voice command failed. Try again."
+                }
+                Toast.makeText(this@HomeActivity, message, Toast.LENGTH_SHORT).show()
+            }
+            override fun onPartialResults(partialResults: Bundle?) {}
+            override fun onEvent(eventType: Int, params: Bundle?) {}
+        })
+
+        findViewById<FloatingActionButton>(R.id.fab_voice)?.setOnClickListener {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.RECORD_AUDIO), 1)
+            } else {
+                speechRecognizer.startListening(speechIntent)
+            }
+        }
+    }
+
+    private fun processVoiceCommand(command: String) {
+        Toast.makeText(this, "Command: $command", Toast.LENGTH_LONG).show()
+        
+        when {
+            command.contains("ac on") || command.contains("turn on ac") -> {
+                DeviceStateManager.setDeviceState("ac_living_room", true)
+                Toast.makeText(this, "Turning on AC", Toast.LENGTH_SHORT).show()
+            }
+            command.contains("ac off") || command.contains("turn off ac") -> {
+                DeviceStateManager.setDeviceState("ac_living_room", false)
+            }
+            command.contains("light on") || command.contains("turn on light") -> {
+                DeviceStateManager.setDeviceState("lamp_bedroom", true)
+            }
+            command.contains("light off") || command.contains("turn off light") -> {
+                DeviceStateManager.setDeviceState("lamp_bedroom", false)
+            }
+            command.contains("fan on") || command.contains("turn on fan") -> {
+                DeviceStateManager.setDeviceState("fan_unit_1", true)
+            }
+            command.contains("fan off") || command.contains("turn off fan") -> {
+                DeviceStateManager.setDeviceState("fan_unit_1", false)
+            }
+            command.contains("tv on") || command.contains("turn on tv") -> {
+                DeviceStateManager.setDeviceState("tv_living_room", true)
+            }
+            command.contains("tv off") || command.contains("turn off tv") -> {
+                DeviceStateManager.setDeviceState("tv_living_room", false)
+            }
+            else -> Toast.makeText(this, "Sorry, I didn't get that command", Toast.LENGTH_SHORT).show()
+        }
+        syncDeviceStates()
+    }
+
     private fun updateUserInfo() {
         val currentUser = FirebaseAuth.getInstance().currentUser
         if (currentUser != null) {
@@ -60,7 +186,6 @@ class HomeActivity : AppCompatActivity() {
             val name = currentUser.displayName ?: currentUser.email?.split("@")?.get(0) ?: "User"
             tvUserName?.text = name
 
-            // Update Drawer Header
             val navigationView = findViewById<NavigationView>(R.id.navigation_view)
             val headerView = navigationView.getHeaderView(0)
             val tvHeaderName = headerView.findViewById<TextView>(R.id.tv_header_name)
@@ -84,35 +209,29 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun syncDeviceStates() {
-        val tvPaired = findViewById<View>(R.id.tv_paired)
-        val parent = tvPaired?.parent as? ViewGroup
-        val grid = parent?.getChildAt(parent.indexOfChild(tvPaired) + 1) as? ViewGroup
-        
-        if (grid != null) {
-            val row1 = grid.getChildAt(0) as? ViewGroup
-            val acCard = row1?.getChildAt(0) as? CardView
-            val tvCard = row1?.getChildAt(1) as? CardView
-            
-            val row2 = grid.getChildAt(1) as? ViewGroup
-            val lightsCard = row2?.getChildAt(0) as? CardView
-            val fanCard = row2?.getChildAt(1) as? CardView
-
-            updateDeviceUI("ac_living_room", acCard)
-            updateDeviceUI("tv_living_room", tvCard)
-            updateDeviceUI("lamp_bedroom", lightsCard)
-            updateDeviceUI("fan_unit_1", fanCard)
-        }
+        updateDeviceUI("ac_living_room", findViewById(R.id.cv_ac))
+        updateDeviceUI("tv_living_room", findViewById(R.id.cv_tv))
+        updateDeviceUI("lamp_bedroom", findViewById(R.id.cv_lamp))
+        updateDeviceUI("fan_unit_1", findViewById(R.id.cv_fan))
     }
 
     private fun updateDeviceUI(deviceId: String, card: CardView?) {
         val isPaired = DeviceStateManager.isDevicePaired(deviceId)
+        val isOn = DeviceStateManager.getDeviceState(deviceId)
         card?.alpha = if (isPaired) 1.0f else 0.5f
+        
+        // Visual feedback for ON/OFF state
+        if (isOn) {
+            card?.setCardBackgroundColor(ContextCompat.getColor(this, R.color.light_mint))
+        } else {
+            card?.setCardBackgroundColor(ContextCompat.getColor(this, android.R.color.white))
+        }
     }
 
     private fun setupRealTimeDate() {
-        val tvDate = findViewById<TextView>(R.id.tv_card_date)
+        val tvDate = findViewById<TextView>(R.id.tv_card_date) ?: return
         val sdf = SimpleDateFormat("dd MMMM, yyyy", Locale.getDefault())
-        tvDate?.text = sdf.format(Date())
+        tvDate.text = sdf.format(Date())
     }
 
     private fun fetchRealWeather() {
@@ -128,7 +247,6 @@ class HomeActivity : AppCompatActivity() {
                     tvHumidity?.text = "Humidity: ${weather.main.humidity}%"
                 }
             } catch (e: Exception) {
-                // Fallback to offline values if API fails
                 tvTemp?.text = "28°"
                 tvHumidity?.text = "Humidity: 45%"
             }
@@ -147,29 +265,7 @@ class HomeActivity : AppCompatActivity() {
         navigationView.setNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.drawer_home -> {}
-                R.id.drawer_devices -> {
-                    startActivity(Intent(this, DeviceScanActivity::class.java).apply {
-                        flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-                    })
-                }
-                R.id.drawer_add_device -> {
-                    startActivity(Intent(this, DeviceScanActivity::class.java).apply {
-                        putExtra("SCAN_MODE", "QR_CODE")
-                        flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-                    })
-                }
-                R.id.drawer_automations -> {
-                    startActivity(Intent(this, DeviceManagementActivity::class.java).apply {
-                        putExtra("FLOW_TYPE", "AUTOMATION")
-                        flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-                    })
-                }
-                R.id.drawer_notifications -> navigateToNotifications()
-                R.id.drawer_settings -> {
-                    startActivity(Intent(this, UserProfileActivity::class.java).apply {
-                        flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-                    })
-                }
+                R.id.drawer_devices -> startActivity(Intent(this, DeviceScanActivity::class.java))
                 R.id.drawer_logout -> performLogout()
             }
             drawerLayout.closeDrawer(GravityCompat.START)
@@ -180,19 +276,13 @@ class HomeActivity : AppCompatActivity() {
     private fun setupBottomNavigation() {
         findViewById<View>(R.id.nav_home)?.setOnClickListener {}
         findViewById<View>(R.id.nav_search)?.setOnClickListener {
-            startActivity(Intent(this, RoomsActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-            })
+            startActivity(Intent(this, RoomsActivity::class.java))
         }
         findViewById<View>(R.id.nav_devices)?.setOnClickListener {
-            startActivity(Intent(this, DeviceScanActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-            })
+            startActivity(Intent(this, DeviceScanActivity::class.java))
         }
         findViewById<View>(R.id.nav_settings)?.setOnClickListener {
-            startActivity(Intent(this, UserProfileActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-            })
+            startActivity(Intent(this, UserProfileActivity::class.java))
         }
     }
 
@@ -200,51 +290,28 @@ class HomeActivity : AppCompatActivity() {
         findViewById<CardView>(R.id.cv_energy)?.setOnClickListener {
             startActivity(Intent(this, DeviceManagementActivity::class.java).apply {
                 putExtra("FLOW_TYPE", "SENSOR_MONITORING")
-                flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
             })
         }
 
         findViewById<Button>(R.id.btn_go_devices)?.setOnClickListener {
-            startActivity(Intent(this, DeviceScanActivity::class.java).apply {
-                putExtra("SCAN_MODE", "MANUAL")
-                flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-            })
+            startActivity(Intent(this, DeviceScanActivity::class.java))
         }
 
-        findViewById<View>(R.id.fl_notification_container)?.setOnClickListener {
-            navigateToNotifications()
+        findViewById<CardView>(R.id.cv_ac)?.setOnClickListener { 
+            handleDeviceNavigation("ac_living_room", "Air Conditioner", AcControlActivity::class.java)
         }
-        
-        val tvPaired = findViewById<View>(R.id.tv_paired)
-        val parent = tvPaired?.parent as? ViewGroup
-        val grid = parent?.getChildAt(parent.indexOfChild(tvPaired) + 1) as? ViewGroup
-        
-        if (grid != null) {
-            val row1 = grid.getChildAt(0) as? ViewGroup
-            // AC
-            row1?.getChildAt(0)?.setOnClickListener { 
-                handleDeviceNavigation("ac_living_room", "Air Conditioner", AcControlActivity::class.java)
-            }
-            // TV
-            row1?.getChildAt(1)?.setOnClickListener { 
-                handleDeviceNavigation("tv_living_room", "Smart TV", TvRemoteActivity::class.java)
-            }
-            
-            val row2 = grid.getChildAt(1) as? ViewGroup
-            // Lamp
-            row2?.getChildAt(0)?.setOnClickListener { 
-                handleDeviceNavigation("lamp_bedroom", "Lamp", LampControlActivity::class.java)
-            }
-            // Fan
-            row2?.getChildAt(1)?.setOnClickListener { 
-                handleDeviceNavigation("fan_unit_1", "Smart Fan", FanControlActivity::class.java)
-            }
+        findViewById<CardView>(R.id.cv_tv)?.setOnClickListener { 
+            handleDeviceNavigation("tv_living_room", "Smart TV", TvRemoteActivity::class.java)
+        }
+        findViewById<CardView>(R.id.cv_lamp)?.setOnClickListener { 
+            handleDeviceNavigation("lamp_bedroom", "Lamp", LampControlActivity::class.java)
+        }
+        findViewById<CardView>(R.id.cv_fan)?.setOnClickListener { 
+            handleDeviceNavigation("fan_unit_1", "Smart Fan", FanControlActivity::class.java)
+        }
 
-            // Long click for unpairing
-            row1?.getChildAt(0)?.setOnLongClickListener { showUnpairingDialog("Air Conditioner", "ac_living_room"); true }
-            row1?.getChildAt(1)?.setOnLongClickListener { showUnpairingDialog("Smart TV", "tv_living_room"); true }
-            row2?.getChildAt(0)?.setOnLongClickListener { showUnpairingDialog("Lamp", "lamp_bedroom"); true }
-            row2?.getChildAt(1)?.setOnLongClickListener { showUnpairingDialog("Smart Fan", "fan_unit_1"); true }
+        findViewById<View>(R.id.fl_notifications)?.setOnClickListener {
+            startActivity(Intent(this, AccountManagementActivity::class.java))
         }
     }
 
@@ -271,34 +338,16 @@ class HomeActivity : AppCompatActivity() {
             .show()
     }
 
-    private fun showUnpairingDialog(deviceName: String, deviceId: String) {
-        AlertDialog.Builder(this)
-            .setTitle("Unpair Device")
-            .setMessage("Are you sure you want to unpair $deviceName?")
-            .setPositiveButton("Unpair") { _, _ ->
-                DeviceStateManager.unpairDevice(deviceId)
-                Toast.makeText(this, "$deviceName unpaired.", Toast.LENGTH_SHORT).show()
-                syncDeviceStates()
-            }
-            .setNegativeButton("Cancel", null)
-            .show()
-    }
-
     private fun applyWindowInsets() {
         val bottomNavContainer = findViewById<View>(R.id.cv_bottom_nav)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content)) { _, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             bottomNavContainer?.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                bottomInsets(systemBars.bottom)
+                val density = resources.displayMetrics.density
+                bottomMargin = (24 * density).toInt() + systemBars.bottom
             }
             insets
         }
-    }
-
-    private fun ViewGroup.MarginLayoutParams.bottomInsets(insetBottom: Int) {
-        val density = resources.displayMetrics.density
-        val baseMargin = (24 * density).toInt()
-        bottomMargin = baseMargin + insetBottom
     }
 
     private fun handleBackNavigation() {
@@ -307,32 +356,17 @@ class HomeActivity : AppCompatActivity() {
                 if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
                     drawerLayout.closeDrawer(GravityCompat.START)
                 } else {
-                    showExitDialog()
+                    finish()
                 }
             }
         })
     }
 
-    private fun navigateToNotifications() {
-        startActivity(Intent(this, AccountManagementActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-        })
-    }
-
     private fun performLogout() {
         FirebaseAuth.getInstance().signOut()
-        val intent = Intent(this, SignInActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
+        startActivity(Intent(this, SignInActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        })
         finish()
-    }
-
-    private fun showExitDialog() {
-        AlertDialog.Builder(this)
-            .setTitle("Exit App")
-            .setMessage("Are you sure you want to exit?")
-            .setPositiveButton("Yes") { _, _ -> finish() }
-            .setNegativeButton("No", null)
-            .show()
     }
 }
